@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title> Create a workspace | Total Collab </title>
+<meta name= "viewport" content= "width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
+<style>
+  .sidenav {
+    height: 100%;
+    width: 20%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #B0C4DE;
+    overflow-x: hidden;
+  }
+  .sidenav a {
+    color: white;
+    font-size: 30px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 20px;
+  }
+  .sidenav c {
+    color: white;
+    font-size: 40px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 150px;
+  }
+  h1{
+    font size: 90px;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+    padding-top: 130px;
+    padding-left: 500px;
+  }
+  h2{
+    font size: 60px;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+    padding-top: 40px;
+    padding-left: 500px;
+  }
+ form{
+   width: 300px;
+   padding-top: 60px;
+   padding-left: 550px;
+   text-align: center;
+}
+input {
+  width: 100%;
+  font-size: 25px;
+}
+img{
+  float: left;
+  padding-left: 25px;
+  max-width: 15%;
+  max-height: 20%;
+}
+</style>
+</head>
+<body>
+
+<div class="sidenav">
+  <img class= "sidenav pic" src="tclogo.png" alt= "TC Logo"/>
+  <c><b>Workspaces</b></c>
+  {% for w in workspaces %}
+    <a href="{{ url_for('workspace', workspaceId = w.id)}}"> {{w.workspaceName}}</a><br>
+  {% endfor %}
+</div>
+
+<div class="content">
+  <h1> Create a new workspace</h1>
+  <h2> Please enter the name of your workspace.</h2>
+  <form action="{{ url_for('add_workspace') }}" method="post">
+    <input type="text" name="workspaceName" placeholder="type here ..">
+    <button type="Submit"> Submit</button>
+  </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+Task Breakdown:
+
+Chris:  Use-case description, domain class diagram, system sequence diagram
+
+Brian: Set up app.py, config.py, __init__.py
+
+Raymond: Set up models.py
+
+Jia: Set up routes.py and basic html pages
+
+Raveena: Designed UI templates using HTML and CSS

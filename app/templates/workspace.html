@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title> Workspace | Total Collab </title>
+<meta name= "viewport" content= "width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
+<style>
+  .sidenav {
+    height: 100%;
+    width: 20%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #B0C4DE;
+    overflow-x: hidden;
+  }
+  .sidenav a {
+    color: white;
+    font-size: 20px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 20px;
+  }
+  .sidenav b {
+    color: white;
+    font-size: 45px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 85px;
+  }
+  .sidenav c {
+    color: white;
+    font-size: 30px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 45px;
+  }
+  h1{
+    font size: 60px;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    padding-top: 200px;
+    padding-left: 400px;
+  }
+  h2{
+    font size: 40px;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    padding-top: 40px;
+    padding-left: 400px;
+  }
+
+  img{
+    float: left;
+    padding-left: 50px;
+    padding-top: 15px;
+    max-width: 10%;
+    max-height: 10%;
+  }
+  form{
+    width: 300px;
+    padding-top: 40px;
+    padding-left: 725px;
+    text-align: center;
+ }
+ input {
+   font-size: 25px;
+   text-align: left;
+ }
+  </style>
+  </head>
+  <body>
+
+    <div class="sidenav">
+      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="tclogo.png" width="50" height="50"></a>
+      <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
+      <b>{{workspace.workspaceName}}</b>
+      <c>Subgroups <a href="{{ url_for('add_subgroup', workspaceId = workspace.id) }}"> Add subgroup here!</a></c>
+      <span style="font-size:25px;">
+        {% for s in subgroups %}
+          <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}}</a>
+        {% endfor %}
+      </span>
+    </div>
+
+    <div class="content">
+    	<h1> Welcome to your workspace!</h1>
+    </div>
+  </body>
+  </html>
