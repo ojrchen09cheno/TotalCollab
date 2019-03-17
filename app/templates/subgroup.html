@@ -120,6 +120,12 @@
       {% for m in messages %}
         <b>{{m.message_username}}</b> {{ moment(m.timestamp).calendar() }} said: </br>{{m.message}}<br></br>
       {% endfor %}
+      {% if newer_url %}
+      <a href="{{ newer_url }}">Newer Messages</a>
+      {% endif %}
+      {% if older_url %}
+      <a href="{{ older_url }}">Older Messages</a>
+      {% endif %}
     </div>
 
     <div class="footer">

@@ -57,8 +57,8 @@ class subGroup(db.Model):
     messages=db.relationship("Message",backref="subgroup",lazy=True,cascade="all, delete")
     workspaceId=db.Column(db.Integer,db.ForeignKey('workspace.id'),nullable=False)
 
-    def addMessage(self,message, current_user):
-        newMessage=Message(message=message,subgroup_id=self.id, message_user_id=current_user.id, message_username=current_user.username)
+    def addMessage(self,message, current_user, subgroupId):
+        newMessage=Message(message=message,subgroup_id=subgroupId, message_user_id=current_user.id, message_username=current_user.username)
         db.session.add(newMessage)
         db.session.commit()
 
