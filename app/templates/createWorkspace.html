@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title> Create a workspace | Total Collab </title>
+<title> Create Workspace | Total Collab </title>
 <meta name= "viewport" content= "width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
 <style>
@@ -48,6 +48,13 @@
     padding-top: 40px;
     padding-left: 500px;
   }
+  h3{
+    font size: 30px;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+    padding-top: 20px;
+    padding-left: 500px;
+  }
  form{
    width: 300px;
    padding-top: 60px;
@@ -76,7 +83,38 @@ img{
   {% endfor %}
 </div>
 
+<div class="content4">
+<h3><hr>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}</h3><h2>
+    {% if current_user.is_anonymous %}
+   <a href="{{ url_for('login') }}">Login</a>
+    {% else %}
+    Hi, {{current_user.username}}<br>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}</h2>
+</div>
+
 <div class="content">
+
+  <hr>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
   <h1> Create a new workspace</h1>
   <h2> Please enter the name of your workspace.</h2>
   <form action="{{ url_for('add_workspace') }}" method="post">
@@ -85,5 +123,24 @@ img{
   </form>
 </div>
 
+<div class="content2">
+  <h1> Join a Workspace</h1>
+  <h2> Please enter the invite code.</h2>
+  <form action="{{ url_for('joinworkspace') }}" method="post">
+    Code
+    <input type="text" name="invitecode" placeholder="type here ..">
+    <button type="Submit"> Submit</button>
+  </form>
+</div>
+
+<div class="content4">
+  <h1> Users </h1><
+  {% for u in users %}
+  <h2>{{u.username}} is in workspaces:</h2>
+  {%for w in u.workspaces%}
+  <h3>{{w.workspaceName}}</h3>
+  {% endfor%}<br><br>
+  {% endfor %}
+</div>
 </body>
 </html>

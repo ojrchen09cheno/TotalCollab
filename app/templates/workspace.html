@@ -57,7 +57,10 @@
     padding-top: 40px;
     padding-left: 400px;
   }
-
+  h3{
+    text-align: center;
+    padding-left: 250px;
+  }
   img{
     float: left;
     padding-left: 50px;
@@ -65,12 +68,6 @@
     max-width: 10%;
     max-height: 10%;
   }
-  form{
-    width: 300px;
-    padding-top: 40px;
-    padding-left: 725px;
-    text-align: center;
- }
  input {
    font-size: 25px;
    text-align: left;
@@ -83,16 +80,39 @@
       <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="tclogo.png" width="50" height="50"></a>
       <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
       <b>{{workspace.workspaceName}}</b>
-      <c>Subgroups <a href="{{ url_for('add_subgroup', workspaceId = workspace.id) }}"> Add subgroup here!</a></c>
+      {% if current_user.id == workspace.owner %}
+      Invite Code: {{workspace.code}}
+      <form action="{{ url_for('newcode', workspaceId = workspace.id) }}" method="post">
+        <button type="Submit"> Generate New Code </button>
+      </form>
+      {% endif %}
+      <c>Subgroups
+        {% if current_user.id == workspace.owner %}
+        <a href="{{ url_for('add_subgroup', workspaceId = workspace.id) }}"> Add subgroup here!</a>
+        {% endif %}
+      </c>
       <span style="font-size:25px;">
         {% for s in subgroups %}
           <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}}</a>
         {% endfor %}
       </span>
+
+      <c>Owner</c>
+      <span style="font-size:25px;">
+      {{owner.username}}
+      </span>
+      <c>Members</c>
+      <span style="font-size:25px;">
+        {% for m in members %}
+        {{m.username}}<br>
+        {% endfor%}
+      </span>
     </div>
 
     <div class="content">
     	<h1> Welcome to your workspace!</h1>
+      <h3>
+    </h3>
     </div>
   </body>
   </html>

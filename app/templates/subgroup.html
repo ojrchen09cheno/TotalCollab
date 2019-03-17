@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title> Workspace | Total Collab </title>
+<title> Subgroup | Total Collab </title>
 <meta name= "viewport" content= "width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
 <style>
@@ -53,7 +53,7 @@
    text-align: left;
 }
   .content{
-    position: static;
+    position: fixed;
     padding-left: 275px;
     top: 0;
     width: 100%;
@@ -74,7 +74,6 @@
     padding-top: 40px;
     padding-left: 400px;
   }
-
   img{
     float: left;
     padding-left: 50px;
@@ -92,7 +91,13 @@
  input {
    font-size: 20px;
    text-align: left;
-   width: 100px;
+   width: 700px;
+   padding-bottom: 10px;
+ }
+ button {
+   font-size: 20px;
+   text-align: left;
+   width: 80px;
  }
   </style>
   </head>
@@ -108,13 +113,13 @@
 
     <div class="content">
       {% for m in messages %}
-        {{m.message}}<br>
+        {{m.message_username}} at {{m.timestamp}} said: </br>{{m.message}}<br>
       {% endfor %}
     </div>
 
     <div class="footer">
       <form action="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = subgroup.id) }}" method="post">
-        <input type="text" name="message"><input type="submit">
+        <input type="text" name="message"></input><button type="submit"> Submit </button>
       </form>
     </div>
   </body>
