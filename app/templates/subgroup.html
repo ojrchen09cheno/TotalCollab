@@ -111,9 +111,14 @@
       <c>{{subgroup.name}}</c>
     </div>
 
+    {% block scripts %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {% endblock %}
+
     <div class="content">
       {% for m in messages %}
-        {{m.message_username}} at {{m.timestamp}} said: </br>{{m.message}}<br>
+        <b>{{m.message_username}}</b> {{ moment(m.timestamp).calendar() }} said: </br>{{m.message}}<br></br>
       {% endfor %}
     </div>
 
