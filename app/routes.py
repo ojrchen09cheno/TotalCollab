@@ -1,12 +1,20 @@
 import sys
-from flask import Flask, render_template, request, url_for, redirect, flash
+from flask import Flask, render_template, request, url_for, redirect, flash, g, jsonify, current_app
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from app.models import *
 from app import app, db
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from app.forms import RegistrationForm, LoginForm
+from app.forms import RegistrationForm, LoginForm, SearchForm
+
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        db.session.commit()
+        g.search_form = SearchForm()
+    g.locale = str()
 
 #index route
 @app.route('/')
@@ -77,7 +85,7 @@ def subgroup(workspaceId, subgroupId):
     if request.method =="POST":
         message = request.form.get("message")
         subgroup.addMessage(message, current_user, subgroupId)
-        return redirect(url_for('subgroup', workspaceId=workspaceId, subgroupId = subgroupId))
+        return redirect(url_for('subgroup', workspaceId=workspaceId, subgroupId=subgroupId))
     return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages.items,
                             newer_url=newer_url,older_url=older_url)
 
@@ -151,3 +159,23 @@ def delete():
 # def is_following(self, user):
 #        return self.followed.filter(
 #            followers.c.followed_id == user.id).count() > 0
+
+
+# shows the search page with results
+@app.route('/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/search')
+@login_required
+def search(workspaceId, subgroupId):
+    if not g.search_form.validate():
+        return redirect(url_for('login'))
+    workspace = Workspace.query.get(workspaceId)
+    subgroups = workspace.subgroups
+    subgroup = subGroup.query.get(subgroupId)
+    messages = subgroup.messages
+    page = request.args.get('page', 1, type=int)
+    messages, total = Message.search(g.search_form.q.data, page, current_app.config['MESSAGES_PER_PAGE'])
+    next_url = url_for('search.html', q=g.search_form.q.data, page=page+1) \
+        if total > page * current_app.config['MESSAGES_PER_PAGE'] else None
+    prev_url = url_for('search.html', q=g.search_form.q.data, page=page-1, ) \
+        if page > 1 else None
+    return render_template('search.html', messages=messages, next_url=next_url, prev_url=prev_url,
+                           workspaceId=workspaceId, subgroupId=subgroupId)

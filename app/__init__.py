@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from flask_login import LoginManager
 from flask_moment import Moment
+from elasticsearch import Elasticsearch
 
 db = SQLAlchemy()
 
@@ -13,5 +14,7 @@ login = LoginManager(app)
 login = LoginManager(app)
 login.login_view = 'login'
 moment = Moment(app)
+app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+    if app.config['ELASTICSEARCH_URL'] else None
 
 from app import routes, models

@@ -1,10 +1,20 @@
-<html>
-  <head>
-    <title> Welcome </title>
-  </head>
-  <body>
-    {% block body %}
-        <h1>{{ ('Search Results') }}</h1>
+{% extends "base.html" %}
+
+{% block app_content %}
+ <div class="sidenav">
+      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="tclogo.png" width="50" height="50"></a><br>
+      <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
+      <c></c>
+      <a href="{{ url_for('workspace', workspaceId = workspace.id) }}">{{workspace.workspaceName}}</a>
+      <c>{{subgroup.name}}</c>
+    </div>
+
+    {% block scripts %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {% endblock %}
+
+    <h1>{{ ('Search Results') }}</h1>
     {% for message in messages %}
         {% include 'messages.html' %}
     {% endfor %}
@@ -22,6 +32,4 @@
             </li>
         </ul>
     </nav>
-    {% endblock %}
-  </body>
-</html>
+{% endblock %}

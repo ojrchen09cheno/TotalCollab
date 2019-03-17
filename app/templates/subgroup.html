@@ -132,6 +132,13 @@
       <form action="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = subgroup.id) }}" method="post">
         <input type="text" name="message"></input><button type="submit"> Submit </button>
       </form>
+      <form class="navbar-form navbar-left" method="get"
+                        action="{{ url_for('search', workspaceId = workspace.id, subgroupId = subgroup.id) }}">
+                    <div class="form-group">
+                        {{ g.search_form.q(size=20, class='form-control',
+                            placeholder=g.search_form.q.label.text) }}
+                    </div>
+      </form>
     </div>
   </body>
   </html>
