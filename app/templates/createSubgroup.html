@@ -91,12 +91,17 @@
     </div>
 
     <div class="content">
+      {% if current_user.id == workspace.owner %}
       <h1> Create a new subgroup</h1>
-      <h2> Please enter the name of your new subgroup.</h2>
+      <h2> Please enter the name of your new subgroup.
+      </h2>
       <form action="{{ url_for('add_subgroup', workspaceId = workspace.id) }}" method="post">
         <input type="text" name="subgroupName" placeholder="type here ..">
         <button type="Submit"> Submit</button>
       </form>
+      {% else %}
+      <h1>Only a workspace's owner is authorized to add a subgroup!</h1>
+      {% endif %}
     </div>
   </body>
   </html>
