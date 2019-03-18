@@ -1,12 +1,14 @@
 import sys
 from flask import Flask, render_template, request, url_for, redirect, flash, g, jsonify, current_app
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO, send
 from config import Config
 from app.models import *
-from app import app, db
+from app import app, db, socketio
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app.forms import RegistrationForm, LoginForm, SearchForm
+
 
 
 @app.before_request
@@ -82,12 +84,16 @@ def subgroup(workspaceId, subgroupId):
         if messages.has_next else None
     newer_url = url_for('subgroup', workspaceId=workspaceId, subgroupId=subgroupId, page=messages.prev_num) \
         if messages.has_prev else None
-    if request.method =="POST":
-        message = request.form.get("message")
-        subgroup.addMessage(message, current_user, subgroupId)
-        return redirect(url_for('subgroup', workspaceId=workspaceId, subgroupId=subgroupId))
+
     return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages.items,
                             newer_url=newer_url,older_url=older_url)
+
+@socketio.on('message')
+def handleMessage(msg):
+    print('message: ' +msg)
+    send(msg, broadcast=True)
+
+
 
 @app.route("/newcode/<int:workspaceId>", methods=["POST"])
 @login_required
