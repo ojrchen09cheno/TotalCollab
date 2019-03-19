@@ -63,10 +63,9 @@
   }
   img{
     float: left;
-    padding-left: 50px;
-    padding-top: 15px;
-    max-width: 10%;
-    max-height: 10%;
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-bottom: 10px;
   }
  input {
    font-size: 25px;
@@ -77,7 +76,7 @@
   <body>
 
     <div class="sidenav">
-      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="tclogo.png" width="50" height="50"></a>
+      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="https://i.imgur.com/d21rm41.jpg" width="200" height="100"></a>
       <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
       <b>{{workspace.workspaceName}}</b>
       {% if current_user.id == workspace.owner %}
