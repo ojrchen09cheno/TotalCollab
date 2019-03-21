@@ -1,0 +1,1 @@
+completed real time messaging between users within a subgroup.
