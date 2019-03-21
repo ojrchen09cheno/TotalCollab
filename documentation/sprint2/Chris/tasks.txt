@@ -1,0 +1,2 @@
+Chris - Implemented add subgroup use case so that only workspace owners can add subgroups to their workspaces.
+        Also fixed logo so it now appears on proper pages

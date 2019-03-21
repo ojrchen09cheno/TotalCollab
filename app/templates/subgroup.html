@@ -96,10 +96,9 @@
   }
   img{
     float: left;
-    padding-left: 50px;
-    padding-top: 15px;
-    max-width: 10%;
-    max-height: 10%;
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-bottom: 10px;
   }
   form{
     width: 400px;
@@ -124,10 +123,8 @@
   <body>
 
     <div class="sidenav">
-      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="tclogo.png" width="50" height="50"></a><br>
-      <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
-      <c></c>
-      <a href="{{ url_for('workspace', workspaceId = workspace.id) }}">{{workspace.workspaceName}}</a>
+      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="https://i.imgur.com/d21rm41.jpg" width="200" height="100"></a>
+      <b><a href="{{ url_for('workspace', workspaceId = workspace.id) }}" style="font-size: 30px;">{{workspace.workspaceName}}</a></b>
       <c>{{subgroup.name}}</c>
     </div>
 
