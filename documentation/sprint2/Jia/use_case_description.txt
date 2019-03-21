@@ -1,0 +1,1 @@
+Jia Chen: Develop invitation codes for workspaces. User inputs invite code from owner and joins the workspace.
