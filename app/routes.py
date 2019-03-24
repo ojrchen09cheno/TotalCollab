@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, url_for, redirect, flash, g, 
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, send
 from config import Config
+import json
 from app.models import *
 from app import app, db, socketio
 from flask_login import current_user, login_user, logout_user, login_required
@@ -90,8 +91,18 @@ def subgroup(workspaceId, subgroupId):
 
 @socketio.on('message')
 def handleMessage(msg):
-    print('message: ' +msg)
+
+    p=json.dumps(msg)
+    hey=json.loads(p)
+
+    print('message: ' + str(msg))
+    workspace = Workspace.query.get(hey['workspaceId'])
+    subgroups= workspace.subgroups
+    subgroup = subGroup.query.get(hey['subgroupId'])
+    messages = subgroup.messages
+    subgroup.addMessage(hey['message'],current_user,hey['subgroupId'])
     send(msg, broadcast=True)
+
 
 
 
