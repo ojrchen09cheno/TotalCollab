@@ -87,7 +87,7 @@ def subgroup(workspaceId, subgroupId):
         if messages.has_prev else None
 
     return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages.items,
-                            newer_url=newer_url,older_url=older_url)
+                            newer_url=newer_url,older_url=older_url, user=current_user)
 
 @socketio.on('message')
 def handleMessage(msg):
@@ -100,7 +100,8 @@ def handleMessage(msg):
     subgroups= workspace.subgroups
     subgroup = subGroup.query.get(hey['subgroupId'])
     messages = subgroup.messages
-    subgroup.addMessage(hey['message'],current_user,hey['subgroupId'])
+    user = User.query.get(hey['user'])
+    subgroup.addMessage(hey['message'],user,hey['subgroupId'])
     send(msg, broadcast=True)
 
 

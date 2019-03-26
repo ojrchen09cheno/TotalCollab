@@ -20,12 +20,14 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
-  <!--  {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul>
         {% for message in messages %}
         <li>{{ message }}</li>
         {% endfor %}
-    </ul>  -->
+    </ul>
+    {% endif %}
+    {% endwith %}
     <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
 {% endblock %}

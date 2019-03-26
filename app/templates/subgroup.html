@@ -18,8 +18,10 @@
             console.log('Received message');
 });
    $('#sendbutton').on('click', function() {
-       socket.json.send(({ 'message': $('#myMessage').val(),'subgroupId': {{subgroup.id}},'workspaceId':{{workspace.id}}}));
+     if ($('#myMessage').val() != ''){
+       socket.json.send(({ 'message': $('#myMessage').val(),'subgroupId': {{subgroup.id}},'workspaceId':{{workspace.id}},'user':{{current_user.id}}}));
          $('#myMessage').val('');
+       }
 });
 });
 
@@ -77,6 +79,7 @@
     position: fixed;
     padding-left: 400px;
     top: 0;
+    left: 0;
     width: 100%;
     color: black;
     text-align: left;
@@ -137,7 +140,7 @@
     <div class="content">
         <ul id="messages">
         {% for msg in messages %}
-      </br>{{msg.message}}<br></br>
+      <li>{{msg.message}}</li>
         {% endfor %}
         {% if newer_url %}
         <a href="{{ newer_url }}">Newer Messages</a>
