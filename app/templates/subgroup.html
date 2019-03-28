@@ -7,21 +7,24 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
 
-  <script type=text/javascript>
-    $(document).ready(function() {
-	     var socket = io.connect('http://127.0.0.1:5000/');
-	      socket.on('connect', function() {
-		        socket.send('A user entered the room');
-	});
-	      socket.on('message', function(msg) {
-		        $("#messages").append('<li>'+msg+'</li>');
-		          console.log('Received message');
-	});
-	   $('#sendbutton').on('click', function() {
-		     socket.send($('#myMessage').val());
-		       $('#myMessage').val('');
-	});
+<script type=text/javascript>
+  $(document).ready(function() {
+     var socket = io.connect('http://127.0.0.1:5000/');
+      socket.on('connect', function() {
+
 });
+      socket.on('message', function(msg) {
+          $("#messages").append('<li>'+msg.message+'</li>');
+            console.log('Received message');
+});
+   $('#sendbutton').on('click', function() {
+     if ($('#myMessage').val() != ''){
+       socket.json.send(({ 'message': $('#myMessage').val(),'subgroupId': {{subgroup.id}},'workspaceId':{{workspace.id}},'user':{{current_user.id}}}));
+         $('#myMessage').val('');
+       }
+});
+});
+
 
   </script>
 <link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
@@ -74,8 +77,9 @@
 }
   .content{
     position: fixed;
-    padding-left: 275px;
+    padding-left: 400px;
     top: 0;
+    left: 0;
     width: 100%;
     color: black;
     text-align: left;
@@ -104,13 +108,13 @@
     width: 400px;
     padding-top: 10px;
     padding-bottom: 10px;
-    padding-left: 300px;
     text-align: center;
  }
  input {
    font-size: 20px;
    text-align: left;
-   width: 700px;
+   width: 400px;
+   padding-left:400px;
    padding-bottom: 10px;
  }
  button {
@@ -134,21 +138,22 @@
     {% endblock %}
 
     <div class="content">
-      <ul id="messages">
-      {% for msg in messages %}
-       </br>{{msg}}<br></br>
-      {% endfor %}
-      {% if newer_url %}
-      <a href="{{ newer_url }}">Newer Messages</a>
-      {% endif %}
-      {% if older_url %}
-      <a href="{{ older_url }}">Older Messages</a>
-      {% endif %}
-    </ul>
-    </div>
+        <ul id="messages">
+        {% for msg in messages %}
+      <li>{{msg.message}}</li>
+        {% endfor %}
+        {% if newer_url %}
+        <a href="{{ newer_url }}">Newer Messages</a>
+        {% endif %}
+        {% if older_url %}
+        <a href="{{ older_url }}">Older Messages</a>
+        {% endif %}
+      </ul>
+      </div>
+
 
     <div class="footer">
-      <input type="text" id="myMessage">
+      <input type="text" id="myMessage"></input>
       <button id="sendbutton">Send</button>
       <form class="navbar-form navbar-left" method="get"
                         action="{{ url_for('search', workspaceId = workspace.id, subgroupId = subgroup.id) }}">

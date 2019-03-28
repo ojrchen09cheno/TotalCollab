@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, url_for, redirect, flash, g, 
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, send
 from config import Config
+import json
 from app.models import *
 from app import app, db, socketio
 from flask_login import current_user, login_user, logout_user, login_required
@@ -20,7 +21,7 @@ def before_request():
 
 #index route
 @app.route('/')
-@app.route('/index')
+@app.route('/index/')
 def index():
     workspaces = []
     if current_user.is_authenticated:
@@ -49,7 +50,7 @@ def add_workspace():
         return redirect(url_for('workspace', workspaceId=newWorkspace.id))
 
 #workspace route
-@app.route("/workspace/<int:workspaceId>")
+@app.route("/workspace/<int:workspaceId>/")
 @login_required
 def workspace(workspaceId):
     workspace = Workspace.query.get(workspaceId)
@@ -59,7 +60,7 @@ def workspace(workspaceId):
     return render_template('workspace.html', workspaceId = workspaceId, subgroups = subgroups, workspace = workspace, members=members, owner=owner)
 
 #create subgroup route
-@app.route("/workspace/<int:workspaceId>/add-subgroup", methods=["GET","POST"])
+@app.route("/workspace/<int:workspaceId>/add-subgroup/", methods=["GET","POST"])
 @login_required
 def add_subgroup(workspaceId):
     workspace = Workspace.query.get(workspaceId)
@@ -71,7 +72,7 @@ def add_subgroup(workspaceId):
     return render_template('createSubgroup.html', subgroups = subgroups, workspace = workspace)
 
 #subgroups route and messages
-@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>", methods=["GET","POST"])
+@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/", methods=["GET","POST"])
 @login_required
 def subgroup(workspaceId, subgroupId):
     workspace = Workspace.query.get(workspaceId)
@@ -86,23 +87,34 @@ def subgroup(workspaceId, subgroupId):
         if messages.has_prev else None
 
     return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages.items,
-                            newer_url=newer_url,older_url=older_url)
+                            newer_url=newer_url,older_url=older_url, user=current_user)
 
 @socketio.on('message')
 def handleMessage(msg):
-    print('message: ' +msg)
+
+    p=json.dumps(msg)
+    hey=json.loads(p)
+
+    print('message: ' + str(msg))
+    workspace = Workspace.query.get(hey['workspaceId'])
+    subgroups= workspace.subgroups
+    subgroup = subGroup.query.get(hey['subgroupId'])
+    messages = subgroup.messages
+    user = User.query.get(hey['user'])
+    subgroup.addMessage(hey['message'],user,hey['subgroupId'])
     send(msg, broadcast=True)
 
 
 
-@app.route("/newcode/<int:workspaceId>", methods=["POST"])
+
+@app.route("/newcode/<int:workspaceId>/", methods=["POST"])
 @login_required
 def newcode(workspaceId):
     workspace = Workspace.query.get(workspaceId)
     workspace.newCode()
     return redirect(url_for('workspace', workspaceId=workspaceId))
 
-@app.route("/join-workspace", methods=["POST"])
+@app.route("/join-workspace/", methods=["POST"])
 @login_required
 def joinworkspace():
     username = request.form.get("username")
@@ -120,7 +132,7 @@ def joinworkspace():
     #    return self.followed.filter(
     #    followers.c.followed_id == user.id).count() > 0
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register/', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -134,7 +146,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -148,12 +160,12 @@ def login():
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
 
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/delete')
+@app.route('/delete/')
 def delete():
     #users = User.query.all()
     #workspaces = Workspace.query.all()
@@ -168,7 +180,7 @@ def delete():
 
 
 # shows the search page with results
-@app.route('/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/search')
+@app.route('/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/search/')
 @login_required
 def search(workspaceId, subgroupId):
     if not g.search_form.validate():
