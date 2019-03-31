@@ -81,13 +81,7 @@ def subgroup(workspaceId, subgroupId):
     messages = subgroup.messages
     page = request.args.get('page', 1, type=int)
     messages = Message.query.filter_by(subgroup_id=subgroupId).order_by(Message.timestamp.desc()).paginate(page, app.config['MESSAGES_PER_PAGE'], False)
-    older_url = url_for('subgroup', workspaceId=workspaceId, subgroupId=subgroupId, page=messages.next_num) \
-        if messages.has_next else None
-    newer_url = url_for('subgroup', workspaceId=workspaceId, subgroupId=subgroupId, page=messages.prev_num) \
-        if messages.has_prev else None
-
-    return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages.items,
-                            newer_url=newer_url,older_url=older_url, user=current_user)
+    return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages, user=current_user)
 
 @socketio.on('message')
 def handleMessage(msg):
