@@ -1,6 +1,62 @@
-{% extends "base.html" %}
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial;
+  color: white;
+}
 
-{% block body %}
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.left {
+  left: 0;
+  background-color: #B0C4DE;
+}
+
+.right {
+  right: 0;
+  background-color: #168eaf;
+  font-color: white;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.centered img {
+  width: 400px;
+  height: 200px;
+  background-size: contain;
+}
+
+a{
+  color: white;
+}
+</style>
+</head>
+    <title> Total Collab | Login </title>
+  <body>
+    <div class="split left">
+  <div class="centered">
+    <img src="https://i.imgur.com/d21rm41.jpg" alt="TC Logo">
+  </div>
+</div>
+
+<div class="split right">
+  <div class="centered">
     <h1>Register</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
@@ -27,4 +83,9 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
-{% endblock %}
+    <p>Already Registered? <a href="{{ url_for('login') }}">Click to Sign In!</a></p>
+  </div>
+</div>
+
+  </body>
+</html>
