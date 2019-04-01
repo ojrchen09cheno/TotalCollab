@@ -6,6 +6,8 @@
 <meta name= "viewport" content= "width=device-width, initial-scale=1.0">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 <script type=text/javascript>
   $(document).ready(function() {
@@ -127,7 +129,7 @@
   <body>
 
     <div class="sidenav">
-      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="https://i.imgur.com/d21rm41.jpg" width="200" height="100"></a>
+      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"></a>
       <b><a href="{{ url_for('workspace', workspaceId = workspace.id) }}" style="font-size: 30px;">{{workspace.workspaceName}}</a></b>
       <c>{{subgroup.name}}</c>
     </div>
@@ -139,16 +141,32 @@
 
     <div class="content">
         <ul id="messages">
-        {% for msg in messages %}
-      <li>{{msg.message}}</li>
+        {% for msg in messages.items %}
+          {{msg.message_username}}</b> on {{ moment(msg.timestamp).calendar() }}<br>
+          {{msg.message}}<br></br>
         {% endfor %}
-        {% if newer_url %}
-        <a href="{{ newer_url }}">Newer Messages</a>
-        {% endif %}
-        {% if older_url %}
-        <a href="{{ older_url }}">Older Messages</a>
-        {% endif %}
       </ul>
+
+      {% if messages.has_prev %}
+      <a href="{{ url_for('subgroup', workspaceId=workspace.id, subgroupId=subgroup.id, page=messages.prev_num) }}">  <i class="fas fa-arrow-left fa-3x"></i></a>
+      {% endif %}
+
+      {% for page in messages.iter_pages(left_edge=1, left_current=1, right_current=2, right_edge=1) %}
+
+        {% if page %}
+          {% if messages.page == page %}
+            <a class="btn btn-info mb-4" href="{{ url_for('subgroup', workspaceId=workspace.id, subgroupId=subgroup.id, page=page) }}">{{ page }}</a>
+          {% else %}
+            <a class="btn btn-outline-info mb-4" href="{{ url_for('subgroup', workspaceId=workspace.id, subgroupId=subgroup.id, page=page) }}">{{ page }}</a>
+          {% endif %}
+        {% else %}
+          ...
+        {% endif %}
+      {% endfor %}
+
+      {% if messages.has_next %}
+      <a href="{{ url_for('subgroup', workspaceId=workspace.id, subgroupId=subgroup.id, page=messages.next_num) }}">  <i class="fas fa-arrow-right fa-3x"></i></a>
+      {% endif %}
       </div>
 
 
