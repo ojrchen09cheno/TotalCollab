@@ -8,7 +8,7 @@ from app.models import *
 from app import app, db, socketio
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from app.forms import RegistrationForm, LoginForm, SearchForm
+from app.forms import RegistrationForm, LoginForm, SearchForm, TaskForm
 
 
 
@@ -50,14 +50,23 @@ def add_workspace():
         return redirect(url_for('workspace', workspaceId=newWorkspace.id))
 
 #workspace route
-@app.route("/workspace/<int:workspaceId>/")
+@app.route("/workspace/<int:workspaceId>/", methods=["POST", "GET"])
 @login_required
 def workspace(workspaceId):
     workspace = Workspace.query.get(workspaceId)
     subgroups = workspace.subgroups
     members = workspace.members
     owner = User.query.get(workspace.owner)
-    return render_template('workspace.html', workspaceId = workspaceId, subgroups = subgroups, workspace = workspace, members=members, owner=owner)
+    form = TaskForm()
+    tasks = workspace.taskboard
+
+    if form.validate_on_submit():
+        task = Taskboard(tasks=form.tasks.data, workspaceId=workspaceId)
+        db.session.add(task)
+        db.session.commit()
+        flash('Task added')
+        return redirect(url_for('workspace', workspaceId=workspaceId))
+    return render_template('workspace.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace, members=members, owner=owner, tasks=tasks, form=form)
 
 #create subgroup route
 @app.route("/workspace/<int:workspaceId>/add-subgroup/", methods=["GET","POST"])

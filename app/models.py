@@ -90,6 +90,7 @@ class Workspace(db.Model):
     subgroups=db.relationship("subGroup",backref="workspace",lazy=True,cascade="all, delete")
     code = db.Column(db.String, nullable=False)
     owner = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    taskboard = db.relationship("Taskboard", backref="taskboard",lazy=True)
 
     def addsubgroup(self,name):
         newGroup=subGroup(name=name,workspaceId=self.id)
@@ -123,3 +124,11 @@ class Message(SearchableMixin, db.Model):
     subgroup_id=db.Column(db.Integer, db.ForeignKey('subgroup.id'),nullable=False)
     message_user_id=db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
     message_username=db.Column(db.Integer, db.ForeignKey('user.username'),nullable=False)
+
+
+class Taskboard(db.Model):
+    __tablename__="taskboard"
+    id=db.Column(db.Integer, primary_key=True)
+    tasks=(db.Column(db.String))
+    workspaceId=db.Column(db.Integer, db.ForeignKey('workspace.id'), nullable=False)
+    workspace = db.relationship("Workspace", backref='tasks')

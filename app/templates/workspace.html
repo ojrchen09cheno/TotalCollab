@@ -110,8 +110,25 @@
 
     <div class="content">
     	<h1> Welcome to your workspace!</h1>
+      <h2>
+        Taskboard
+    </h2>
       <h3>
-    </h3>
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+          <p>
+            {{ form.tasks.label }}<br>
+            {{ form.tasks(size=32) }}<br>
+          </p>
+          {{form.submit()}}<br>
+        </form>
+      </h3>
+      <h4>
+        {% for t in tasks %}
+        {{t.tasks}}
+        {% endfor %}
+      </h4>
+
     </div>
   </body>
   </html>
