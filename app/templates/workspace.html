@@ -110,9 +110,8 @@
 
     <div class="content">
     	<h1> Welcome to your workspace!</h1>
-      <h2>
-        Taskboard
-    </h2>
+      <h2>Taskboard
+      </h2>
       <h3>
         <form action="" method="post" novalidate>
             {{ form.hidden_tag() }}
@@ -123,11 +122,11 @@
           {{form.submit()}}<br>
         </form>
       </h3>
-      <h4>
+      <h3>
         {% for t in tasks %}
-        {{t.tasks}}
+        {{t.tasks}}<br>
         {% endfor %}
-      </h4>
+      </h3>
 
     </div>
   </body>
