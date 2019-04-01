@@ -60,6 +60,13 @@ subs = db.Table('subs',
     db.Column('workspace_id', db.Integer, db.ForeignKey('workspace.id'))
 )
 
+subgroupMember = db.Table('subgroupMember',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('subgroup_id', db.Integer, db.ForeignKey('subgroup.id'))
+)
+
+
+
 
 #User class for later
 class User(UserMixin, db.Model):
@@ -69,6 +76,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     owns = db.relationship("Workspace", backref="user", lazy=True,cascade="all, delete")
     workspaces = db.relationship("Workspace",secondary=subs,backref=db.backref('members', lazy='dynamic'), lazy='dynamic')
+    subgroups = db.relationship("subGroup", secondary=subgroupMember, backref=db.backref('members', lazy='dynamic'), lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

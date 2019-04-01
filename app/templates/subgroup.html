@@ -71,6 +71,8 @@
   .footer {
    position: fixed;
    left: 0;
+   padding-top: 10px;
+   padding-left:20%;
    bottom: 0;
    width: 100%;
    background-color: #B0C4DE;
@@ -110,13 +112,12 @@
     width: 400px;
     padding-top: 10px;
     padding-bottom: 10px;
-    text-align: center;
+    text-align: left;
  }
  input {
    font-size: 20px;
    text-align: left;
-   width: 400px;
-   padding-left:400px;
+   width: 200px;
    padding-bottom: 10px;
  }
  button {
@@ -124,6 +125,14 @@
    text-align: left;
    width: 80px;
  }
+somemsg {
+  font-size: 20px;
+  text-align: left;
+  width: 200px;
+  padding-left: 400px:
+
+ }
+
   </style>
   </head>
   <body>
@@ -131,7 +140,19 @@
     <div class="sidenav">
       <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"></a>
       <b><a href="{{ url_for('workspace', workspaceId = workspace.id) }}" style="font-size: 30px;">{{workspace.workspaceName}}</a></b>
-      <c>{{subgroup.name}}</c>
+      <c>{{subgroup.name}}</c><br>
+
+      <c>Add a member to {{subgroup.name}}</c><br>
+      <form action="{{ url_for('subgroupMember', subgroupId = subgroup.id, workspaceId = workspace.id) }}" method="post">
+        <input type="text" name="username" placeholder="type here .."><br>
+        <button type="Submit"> Add </button>
+      </form>
+
+      <c>Members</c>
+      {%for m in members%}
+      {{m.username}}<br>
+      {%endfor%}
+
     </div>
 
     {% block scripts %}
