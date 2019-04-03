@@ -87,10 +87,11 @@ def subgroup(workspaceId, subgroupId):
     workspace = Workspace.query.get(workspaceId)
     subgroups= workspace.subgroups
     subgroup = subGroup.query.get(subgroupId)
+    members = subgroup.members
     messages = subgroup.messages
     page = request.args.get('page', 1, type=int)
     messages = Message.query.filter_by(subgroup_id=subgroupId).order_by(Message.timestamp.desc()).paginate(page, app.config['MESSAGES_PER_PAGE'], False)
-    return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages, user=current_user)
+    return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages, user=current_user, members=members)
 
 @socketio.on('message')
 def handleMessage(msg):
@@ -233,3 +234,15 @@ def search(workspaceId, subgroupId):
         if page > 1 else None
     return render_template('search.html', messages=messages, next_url=next_url, prev_url=prev_url,
                            workspaceId=workspaceId, subgroupId=subgroupId)
+
+#add members to a subgroup
+@app.route('/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/addMember/')
+@login_required
+def subgroupMember(workspaceId,subgroupId):
+    username=request.form.get('username')
+    user = User.query.filter_by(username=username)
+    subgroup = subGroup.query.get(subgroupId)
+    subgroup.members.append(user)
+    db.sesssion.commit()
+    flash("Added member")
+    return redirect(url_for('subgroup'))
