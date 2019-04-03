@@ -107,6 +107,39 @@ def handleMessage(msg):
     subgroup.addMessage(hey['message'],user,hey['subgroupId'])
     send(msg, broadcast=True)
 
+@app.route("/direct/<int:otherUserId>", methods=["GET"])
+@login_required
+def direct(otherUserId):
+    doesItExist= False
+    otherUser=User.query.get(otherUserId)
+    directQuery=Direct.query.all()
+    for x in directQuery:
+        if (x.userOne == otherUser.id and x.userTwo ==current_user.id) or (x.userOne == current_user.id and x.userTwo==otherUser.id):
+            print("HELLO THERE")
+            chatId=x.id
+            doesItExist=True
+            return redirect(url_for('actualChannel',direct=chatId))
+    if doesItExist == False:
+        newDirect= Direct(userOne=current_user.id,userTwo=otherUser.id)
+        db.session.add(newDirect)
+        db.session.commit()
+        print(newDirect.id)
+        return redirect(url_for('actualChannel',direct=newDirect.id))
+
+    #return ("DirectChat.html")
+    return("HEY")
+@app.route("/directChat/<int:direct>",methods=["GET","POST"])
+def actualChannel(direct):
+    channel=Direct.query.get(direct)
+    channelId=channel.id
+    messages=channel.messages
+    if request.method =="POST":
+        message=request.form.get("message")
+        channel.addMessage(message,current_user,channelId)
+        return redirect(url_for('actualChannel', direct=direct))
+
+    return render_template("DirectChat.html",direct=direct, channel=channel,messages=messages)
+
 
 
 

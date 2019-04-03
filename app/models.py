@@ -132,3 +132,24 @@ class Taskboard(db.Model):
     tasks=(db.Column(db.String))
     workspaceId=db.Column(db.Integer, db.ForeignKey('workspace.id'), nullable=False)
     workspace = db.relationship("Workspace", backref='tasks')
+
+
+class Direct(db.Model):
+    __tablename__="direct"
+    id=db.Column(db.Integer,primary_key=True)
+    userOne = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    userTwo = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    messages=db.relationship("DirectMessage",backref="direct",lazy=True,cascade="all, delete")
+
+    def addMessage(self,message,user,directgroupId):
+        newMessage=DirectMessage(message=message,directgroupId=directgroupId,message_user_id=user.id,message_username=user.username)
+        db.session.add(newMessage)
+        db.session.commit()
+
+class DirectMessage(db.Model):
+    __tablename__="directmessage"
+    id=db.Column(db.Integer,primary_key=True)
+    message=db.Column(db.String,nullable=False)
+    directgroupId=db.Column(db.Integer, db.ForeignKey('direct.id'),nullable=False)
+    message_user_id=db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    message_username=db.Column(db.Integer, db.ForeignKey('user.username'),nullable=False)

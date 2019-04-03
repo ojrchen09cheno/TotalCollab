@@ -103,7 +103,7 @@
       <c>Members</c>
       <span style="font-size:25px;">
         {% for m in members %}
-        {{m.username}}<br>
+        {{m.username}} <a href="{{url_for('direct',otherUserId=m.id)}}">CHAT WITH THIS PERSON </a> <br> <!-- put link here for direct messaging -->
         {% endfor%}
       </span>
     </div>
