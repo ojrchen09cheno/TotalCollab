@@ -92,7 +92,11 @@
       </c>
       <span style="font-size:25px;">
         {% for s in subgroups %}
+        {% for m in s.members%}
+        {% if current_user == m%}
           <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}}</a>
+        {%endif%}
+        {%endfor%}
         {% endfor %}
       </span>
 

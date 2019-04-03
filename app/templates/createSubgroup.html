@@ -80,12 +80,6 @@
     <div class="sidenav">
       <img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"><br><br>
       <a href="{{ url_for('workspace', workspaceId = workspace.id) }}"> <b>{{workspace.workspaceName}}</b></a>
-      <c>Subgroups</c>
-      <span style="font-size:25px;">
-        {% for s in subgroups %}
-          <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}}</a>
-        {% endfor %}
-      </span>
     </a>
     </div>
 

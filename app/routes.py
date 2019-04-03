@@ -47,6 +47,9 @@ def add_workspace():
         newWorkspace.members.append(current_user)
         db.session.commit()
         newWorkspace.addsubgroup("General")
+        subgroup = subGroup.query.filter_by(name="General").first()
+        subgroup.members.append(current_user)
+        db.session.commit()
         return redirect(url_for('workspace', workspaceId=newWorkspace.id))
 
 #workspace route
@@ -77,6 +80,9 @@ def add_subgroup(workspaceId):
     if request.method =="POST":
         subgroupName = request.form.get("subgroupName")
         workspace.addsubgroup(subgroupName)
+        subgroup = subGroup.query.filter_by(name=subgroupName).first()
+        subgroup.members.append(current_user)
+        db.session.commit()
         return redirect(url_for('workspace', workspaceId=workspaceId))
     return render_template('createSubgroup.html', subgroups = subgroups, workspace = workspace)
 
@@ -217,7 +223,7 @@ def delete():
 
 
 # shows the search page with results
-@app.route('/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/search/')
+@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/search/")
 @login_required
 def search(workspaceId, subgroupId):
     if not g.search_form.validate():
@@ -228,15 +234,12 @@ def search(workspaceId, subgroupId):
     messages = subgroup.messages
     page = request.args.get('page', 1, type=int)
     messages, total = Message.search(g.search_form.q.data, page, current_app.config['MESSAGES_PER_PAGE'])
-    next_url = url_for('search.html', q=g.search_form.q.data, page=page+1) \
-        if total > page * current_app.config['MESSAGES_PER_PAGE'] else None
-    prev_url = url_for('search.html', q=g.search_form.q.data, page=page-1, ) \
-        if page > 1 else None
-    return render_template('search.html', messages=messages, next_url=next_url, prev_url=prev_url,
-                           workspaceId=workspaceId, subgroupId=subgroupId)
+    next_url = url_for('search.html', q=g.search_form.q.data, page=page+1) if total > page * current_app.config['MESSAGES_PER_PAGE'] else None
+    prev_url = url_for('search.html', q=g.search_form.q.data, page=page-1) if page > 1 else None
+    return render_template('search.html', messages=messages, next_url=next_url, prev_url=prev_url,workspaceId=workspaceId, subgroupId=subgroupId)
 
 #add members to a subgroup
-@app.route('/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/addMember/')
+@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/addMember/", methods=['POST'])
 @login_required
 def subgroupMember(workspaceId,subgroupId):
     username=request.form.get('username')
@@ -246,3 +249,46 @@ def subgroupMember(workspaceId,subgroupId):
     db.sesssion.commit()
     flash("Added member")
     return redirect(url_for('subgroup'))
+
+#manage members of a subgroup
+@app.route("/workspace/<int:workspaceId>/subgropup/<int:subgroupId>/manageMembers/")
+@login_required
+def manageMembers(workspaceId,subgroupId):
+    workspace = Workspace.query.get(workspaceId)
+    subgroup = subGroup.query.get(subgroupId)
+    subMembers = subgroup.members
+    members = workspace.members
+    workMembers = []
+    check = True
+    for w in members:
+        for s in subMembers:
+            if w == s:
+                check=False
+        if check==True:
+            workMembers.append(w)
+        if check==False:
+            check=True
+    return render_template('manage.html', workspace = workspace, subgroup=subgroup,subMembers = subMembers,workMembers=workMembers)
+
+
+#Route for adding members to a subgroup
+@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/add/<int:userId>/",methods=['POST'])
+@login_required
+def add(workspaceId, subgroupId,userId):
+    user = User.query.get(userId)
+    subgroup = subGroup.query.get(subgroupId)
+    subgroup.members.append(user)
+    db.session.commit()
+    flash("Added member")
+    return redirect(url_for('manageMembers', workspaceId=workspaceId, subgroupId=subgroupId))
+
+#Route for deleting members from a subgroup
+@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/kick/<int:userId>/", methods=['POST'])
+@login_required
+def kick(workspaceId, subgroupId, userId):
+    user = User.query.get(userId)
+    subgroup = subGroup.query.get(subgroupId)
+    subgroup.members.remove(user)
+    db.session.commit()
+    flash("Kicked member")
+    return redirect(url_for('manageMembers', workspaceId= workspaceId, subgroupId=subgroupId))
