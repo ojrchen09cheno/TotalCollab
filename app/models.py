@@ -100,9 +100,10 @@ class Workspace(db.Model):
     owner = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     taskboard = db.relationship("Taskboard", backref="taskboard",lazy=True)
 
-    def addsubgroup(self,name):
+    def addsubgroup(self,name,user):
         newGroup=subGroup(name=name,workspaceId=self.id)
         db.session.add(newGroup)
+        newGroup.members.append(user)
         db.session.commit()
 
     def newCode(self,size=5, chars=string.ascii_uppercase + string.digits):

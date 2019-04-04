@@ -46,10 +46,7 @@ def add_workspace():
         db.session.add(newWorkspace)
         newWorkspace.members.append(current_user)
         db.session.commit()
-        newWorkspace.addsubgroup("General")
-        subgroup = subGroup.query.filter_by(name="General").first()
-        subgroup.members.append(current_user)
-        db.session.commit()
+        newWorkspace.addsubgroup("General",current_user)
         return redirect(url_for('workspace', workspaceId=newWorkspace.id))
 
 #workspace route
@@ -62,7 +59,6 @@ def workspace(workspaceId):
     owner = User.query.get(workspace.owner)
     form = TaskForm()
     tasks = workspace.taskboard
-
     if form.validate_on_submit():
         task = Taskboard(tasks=form.tasks.data, workspaceId=workspaceId)
         db.session.add(task)
@@ -79,10 +75,7 @@ def add_subgroup(workspaceId):
     subgroups = workspace.subgroups
     if request.method =="POST":
         subgroupName = request.form.get("subgroupName")
-        workspace.addsubgroup(subgroupName)
-        subgroup = subGroup.query.filter_by(name=subgroupName).first()
-        subgroup.members.append(current_user)
-        db.session.commit()
+        workspace.addsubgroup(subgroupName, current_user)
         return redirect(url_for('workspace', workspaceId=workspaceId))
     return render_template('createSubgroup.html', subgroups = subgroups, workspace = workspace)
 

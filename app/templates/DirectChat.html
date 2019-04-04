@@ -1,8 +1,7 @@
 <html>
 
 {% for m in messages %}
-{{m.message_username}} 
-     said: {{m.message}} <br>
+{{m.message_username}} said: {{m.message}} <br>
     {% endfor %}
 <form action="{{ url_for('actualChannel', direct=direct) }}" method="post">
        <input type="text" name="message"></input><button type="submit"> Submit </button>
