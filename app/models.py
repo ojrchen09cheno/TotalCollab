@@ -77,6 +77,10 @@ class User(UserMixin, db.Model):
     owns = db.relationship("Workspace", backref="user", lazy=True,cascade="all, delete")
     workspaces = db.relationship("Workspace",secondary=subs,backref=db.backref('members', lazy='dynamic'), lazy='dynamic')
     subgroups = db.relationship("subGroup", secondary=subgroupMember, backref=db.backref('members', lazy='dynamic'), lazy='dynamic')
+    firstName=db.Column(db.String(20), nullable=True)
+    lastName=db.Column(db.String(20), nullable=True)
+    location=db.Column(db.String(30), nullable=True)
+    about_me=db.Column(db.Text(), nullable=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

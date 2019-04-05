@@ -126,9 +126,6 @@ img{
 </div>
 
 
-
-
-
 <script>
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
@@ -167,8 +164,12 @@ function filterFunction() {
    <a href="{{ url_for('login') }}">Login</a>
     {% else %}
     Hi, {{current_user.username}}<br>
-    <a href="{{ url_for('logout') }}">Logout</a>
-    {% endif %}</h2>
+    <a href="{{ url_for('createUserProfile', username=current_user.username) }}">Create/Edit Your Profile</a>
+    <a href="{{ url_for('user', username=current_user.username) }}">View Your Profile</a>
+    <br> <a href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}
+
+  </h2>
 </div>
 
 <div class="content">

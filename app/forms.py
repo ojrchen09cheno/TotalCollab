@@ -38,7 +38,13 @@ class SearchForm(FlaskForm):
             kwargs['csrf_enabled'] = False
         super(SearchForm, self).__init__(*args, **kwargs)
 
-
 class TaskForm(FlaskForm):
     tasks = StringField('Enter task', validators=[DataRequired()])
     submit = SubmitField('Enter')
+
+class ProfileForm(FlaskForm):
+    firstName= StringField('First Name ..', render_kw={"placeholder": "First Name .."})
+    lastName=  StringField('Last Name ..', render_kw={"placeholder": "Last Name .."})
+    location= StringField('Location ..', render_kw={"placeholder": "Location"})
+    about_me= StringField('About me ..', render_kw={"placeholder": "About Me .. "})
+    submit= SubmitField('Create Your Profile')

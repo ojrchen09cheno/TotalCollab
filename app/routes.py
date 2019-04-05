@@ -8,7 +8,7 @@ from app.models import *
 from app import app, db, socketio
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from app.forms import RegistrationForm, LoginForm, SearchForm, TaskForm
+from app.forms import RegistrationForm, LoginForm, SearchForm, TaskForm, ProfileForm
 
 
 
@@ -285,3 +285,26 @@ def kick(workspaceId, subgroupId, userId):
     db.session.commit()
     flash("Kicked member")
     return redirect(url_for('manageMembers', workspaceId= workspaceId, subgroupId=subgroupId))
+
+@app.route("/createUserProfile/", methods=["GET", "POST"])
+@login_required
+def createUserProfile():
+    user = current_user
+    form = ProfileForm()
+    if request.method == 'POST':
+        user.firstName = request.form.get("firstName")
+        user.lastName = request.form.get("lastName")
+        user.location = request.form.get("location")
+        user.about_me = request.form.get("about_me")
+        db.session.commit()
+        flash("Thanks for creating a profile!")
+        #return " Test"
+        #return render_template("createUserProfile.html", workspace=workspace, form=form)
+        return redirect(url_for('user', username = user.username))
+    return render_template("createUserProfile.html", workspace=workspace, form=form)
+
+@app.route("/profile/<string:username>", methods=["GET"])
+@login_required
+def user(username):
+    user= User.query.filter_by(username=username).first()
+    return render_template('userProfile.html', user=user, workspace=workspace)
