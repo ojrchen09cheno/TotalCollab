@@ -1,0 +1,25 @@
+<html>
+<body>
+<img alt="TC Logo" src="https://i.imgur.com/d21rm41.jpg" width="200" height="100"><br><br>
+
+Hello {{username}},<br><br>
+
+This email serves as a reminder for the following:<br><br>
+{% for t in tasks %}
+{% if t.id == taskId %}
+Task Name: {{t.name}}<br>
+Task Description: {{t.description}}<br>
+Deadline: {{ t.deadline_day }} at {{ t.deadline_time}}
+{% endif %}
+{% endfor %}
+<br><br>
+Additional Notes:<br>
+{{message_content}}<br><br>
+
+
+Thank you, <br>
+{{owner.username}}<br>
+Owner of Workspace: {{workspace.workspaceName}}
+
+  </body>
+</html>

@@ -72,6 +72,7 @@ subgroupMember = db.Table('subgroupMember',
 class User(UserMixin, db.Model):
     __tablename__="user"
     id=db.Column(db.Integer,primary_key=True)
+    email=db.Column(db.String,nullable=False, unique=True)
     username=db.Column(db.String,nullable=False, unique=True)
     password_hash = db.Column(db.String(128))
     owns = db.relationship("Workspace", backref="user", lazy=True,cascade="all, delete")
@@ -114,6 +115,10 @@ class Workspace(db.Model):
         self.code = ''.join(random.choice(chars) for _ in range(size))
         db.session.commit()
 
+    def addTask(self, name, description, deadline_day, deadline_time, workspaceId):
+        newTask=Taskboard(name=name, description=description, deadline_day=deadline_day, deadline_time=deadline_time, workspaceId=self.id)
+        db.session.add(newTask)
+        db.session.commit()
 
 class subGroup(db.Model):
     __tablename__="subgroup"
@@ -142,7 +147,10 @@ class Message(SearchableMixin, db.Model):
 class Taskboard(db.Model):
     __tablename__="taskboard"
     id=db.Column(db.Integer, primary_key=True)
-    tasks=(db.Column(db.String))
+    name=db.Column(db.String)
+    description=db.Column(db.String)
+    deadline_day=db.Column(db.String)
+    deadline_time=db.Column(db.String)
     workspaceId=db.Column(db.Integer, db.ForeignKey('workspace.id'), nullable=False)
     workspace = db.relationship("Workspace", backref='tasks')
 

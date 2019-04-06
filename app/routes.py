@@ -5,11 +5,11 @@ from flask_socketio import SocketIO, send
 from config import Config
 import json
 from app.models import *
-from app import app, db, socketio
+from app import app, db, socketio, mail
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app.forms import RegistrationForm, LoginForm, SearchForm, TaskForm, ProfileForm
-
+from flask_mail import Message
 
 
 @app.before_request
@@ -57,15 +57,51 @@ def workspace(workspaceId):
     subgroups = workspace.subgroups
     members = workspace.members
     owner = User.query.get(workspace.owner)
-    form = TaskForm()
+    # form = TaskForm()
     tasks = workspace.taskboard
-    if form.validate_on_submit():
-        task = Taskboard(tasks=form.tasks.data, workspaceId=workspaceId)
-        db.session.add(task)
-        db.session.commit()
-        flash('Task added')
+
+    if request.method =="POST":
+        name = request.form.get("name")
+        description = request.form.get("description")
+        deadline_day = request.form.get("deadline_day")
+        deadline_time = request.form.get("deadline_time")
+        workspace.addTask(name, description, deadline_day, deadline_time, workspaceId)
         return redirect(url_for('workspace', workspaceId=workspaceId))
-    return render_template('workspace.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace, members=members, owner=owner, tasks=tasks, form=form)
+
+    # if form.validate_on_submit():
+    #     task = Taskboard(tasks=form.tasks.data, workspaceId=workspaceId)
+    #     db.session.add(task)
+    #     db.session.commit()
+    #     flash('Task added')
+    #     return redirect(url_for('workspace', workspaceId=workspaceId))
+    return render_template('workspace.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace, members=members, owner=owner, tasks=tasks)
+
+@app.route('/workspace/<int:workspaceId>/reminder/task/<int:taskId>/', methods=['GET','POST'])
+def sendReminder(workspaceId, taskId):
+        workspace = Workspace.query.get(workspaceId)
+        subgroups = workspace.subgroups
+        members = workspace.members
+        owner = User.query.get(workspace.owner)
+        # form = TaskForm()
+        tasks = workspace.taskboard
+        taskId = taskId
+        if request.method =="POST":
+            # message_subject = request.form.get("message_subject")
+            # message_content = request.form.get("message_content")
+            # for m in members:
+            #     msg = Message(subject=message_subject, sender=app.config['MAIL_USERNAME'])
+            #     msg.body = message_content
+            #     msg.add_recipient(m.email)
+            #     mail.send(msg)
+            with mail.connect() as conn:
+                for m in members:
+                    message_subject = request.form.get("message_subject")
+                    message_content = request.form.get("message_content")
+                    msg = Message(recipients=[m.email], sender=app.config['MAIL_USERNAME'], subject=message_subject)
+                    msg.html = render_template('emailReminder.html', username=m.username, message_content=message_content, tasks=tasks, taskId=taskId, owner=owner, workspace=workspace)
+                    conn.send(msg)
+            return redirect(url_for('workspace', workspaceId=workspaceId))
+        return render_template('sendReminder.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace, members=members, owner=owner, tasks=tasks, taskId=taskId)
 
 #create subgroup route
 @app.route("/workspace/<int:workspaceId>/add-subgroup/", methods=["GET","POST"])
@@ -174,7 +210,7 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data)
+        user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()

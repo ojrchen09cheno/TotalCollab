@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title> Workspace | Total Collab </title>
+<meta name= "viewport" content= "width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
+<style>
+  .sidenav {
+    height: 100%;
+    width: 20%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #B0C4DE;
+    overflow-x: hidden;
+  }
+  .sidenav a {
+    color: white;
+    font-size: 20px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 20px;
+  }
+  .sidenav b {
+    color: white;
+    font-size: 45px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 85px;
+  }
+  .sidenav c {
+    color: white;
+    font-size: 30px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 45px;
+  }
+  h1{
+    font size: 60px;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    padding-top: 200px;
+    padding-left: 400px;
+  }
+  h2{
+    font size: 40px;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    padding-top: 40px;
+    padding-left: 250px;
+  }
+  h3{
+    text-align: center;
+    padding-left: 250px;
+  }
+  img{
+    float: left;
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+  }
+ input {
+   font-size: 25px;
+   text-align: left;
+ }
+  </style>
+  </head>
+  <body>
+
+    <div class="sidenav">
+      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"></a><br><br>
+      <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
+      <b>{{workspace.workspaceName}}</b>
+      {% if current_user.id == workspace.owner %}
+      Invite Code: {{workspace.code}}
+      <form action="{{ url_for('newcode', workspaceId = workspace.id) }}" method="post">
+        <button type="Submit"> Generate New Code </button>
+      </form>
+      {% endif %}
+      <c>Subgroups
+        {% if current_user.id == workspace.owner %}
+        <a href="{{ url_for('add_subgroup', workspaceId = workspace.id) }}"> Add subgroup here!</a>
+        {% endif %}
+      </c>
+      <span style="font-size:25px;">
+        {% for s in subgroups %}
+        {% for m in s.members%}
+        {% if current_user == m%}
+          <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}}</a>
+        {%endif%}
+        {%endfor%}
+        {% endfor %}
+      </span>
+
+      <c>Owner</c>
+      <span style="font-size:25px;">
+      {{owner.username}}
+      </span>
+      <c>Members</c>
+      <span style="font-size:25px;">
+        {% for m in members %}
+        {{m.username}} <a href="{{url_for('direct',otherUserId=m.id)}}">CHAT WITH THIS PERSON </a> <br> <!-- put link here for direct messaging -->
+        {% endfor%}
+      </span>
+    </div>
+
+    <div class="content">
+      <h2>Task Reminder Email
+      </h2>
+      <h3>
+        The task informtion below will be contained in the email. Please enter the subject line and any additional comments for the email.<br><br>
+        {% for t in tasks %}
+        {% if t.id == taskId %}
+        Task Name: {{t.name}}<br>
+        Task Description: {{t.description}}<br>
+        Deadline: {{ t.deadline }}
+        {% endif %}
+        {% endfor %}
+      </h3>
+      <h3>
+        <form action="{{ url_for('sendReminder', workspaceId = workspace.id, taskId=taskId) }}" method="post">
+          Email Subject Line: <br><input type="text" name="message_subject"><br>
+          Email Message: <br><textarea rows="10" cols="50" name="message_content"></textarea><br>
+          <button type="Submit"> Submit</button>
+        </form>
+      </h3>
+    </div>
+  </body>
+  </html>
