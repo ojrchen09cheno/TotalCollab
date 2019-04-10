@@ -6,7 +6,7 @@ from app.models import User
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
-#    email = StringField('Email', validators=[DataRequired(), Email()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
@@ -17,10 +17,10 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different username.')
 
-#    def validate_email(self, email):
-#        user = User.query.filter_by(email=email.data).first()
-#        if user is not None:
-#            raise ValidationError('Please use a different email address.')
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is not None:
+            raise ValidationError('Please use a different email address.')
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -38,7 +38,13 @@ class SearchForm(FlaskForm):
             kwargs['csrf_enabled'] = False
         super(SearchForm, self).__init__(*args, **kwargs)
 
-
 class TaskForm(FlaskForm):
     tasks = StringField('Enter task', validators=[DataRequired()])
     submit = SubmitField('Enter')
+
+class ProfileForm(FlaskForm):
+    firstName= StringField('First Name ..', render_kw={"placeholder": "First Name .."})
+    lastName=  StringField('Last Name ..', render_kw={"placeholder": "Last Name .."})
+    location= StringField('Location ..', render_kw={"placeholder": "Location"})
+    about_me= StringField('About me ..', render_kw={"placeholder": "About Me .. "})
+    submit= SubmitField('Create Your Profile')

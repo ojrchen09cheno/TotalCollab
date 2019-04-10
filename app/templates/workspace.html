@@ -121,18 +121,22 @@
       <h2>Taskboard
       </h2>
       <h3>
-        <form action="" method="post" novalidate>
-            {{ form.hidden_tag() }}
-          <p>
-            {{ form.tasks.label }}<br>
-            {{ form.tasks(size=32) }}<br>
-          </p>
-          {{form.submit()}}<br>
+        <form action="{{ url_for('workspace', workspaceId = workspace.id) }}" method="post">
+          Task Name: <input type="text" name="name"><br>
+          Task Description: <input type="text" name="description"><br>
+          Task Deadline Day: <input type="date" name="deadline_day"><br>
+          Task Deadline Time: <input type="time" name="deadline_time"><br>
+          <button type="Submit"> Submit</button>
         </form>
       </h3>
       <h3>
         {% for t in tasks %}
-        {{t.tasks}}<br>
+        Task Name: {{t.name}}<br>
+        Task Description: {{t.description}}<br>
+        Deadline: {{ t.deadline_day }} at {{ t.deadline_time}}
+        {% if current_user.id == workspace.owner %}
+        <a href="{{ url_for('sendReminder', taskId = t.id, workspaceId = workspace.id) }}"> Send Reminder Email!</a>
+        {% endif %}<br><br>
         {% endfor %}
       </h3>
 

@@ -8,3 +8,10 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MESSAGES_PER_PAGE = 10
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+
+    MAIL_SERVER = 'smtp.gmail.com' # name of the email server
+    MAIL_PORT = 465 # port of server
+    # MAIL_USE_TSL = True for more encryption
+    MAIL_USE_SSL = True # enable SSL encryption
+    MAIL_USERNAME = 'Total.Collab1@gmail.com' # username of sender
+    MAIL_PASSWORD = '#CUS1166' # password of sender

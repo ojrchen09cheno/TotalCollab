@@ -1,0 +1,1 @@
+Created user profiles that consist of the user's first and last name, location, and short bio
