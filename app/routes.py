@@ -59,7 +59,7 @@ def workspace(workspaceId):
     status = False
     for m in workspace.mods:
         if current_user == m:
-            subgroups = subGroup.query.all()
+            subgroups = workspace.subgroups
             status=True
     if status == False:
         for s in workspace.subgroups:
