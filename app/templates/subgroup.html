@@ -142,13 +142,17 @@ somemsg {
       <b><a href="{{ url_for('workspace', workspaceId = workspace.id) }}" style="font-size: 30px;">{{workspace.workspaceName}}</a></b>
       <c>{{subgroup.name}}</c><br>
 
-      {%if current_user.id == workspace.owner%}
+      {%for m in workspace.mods%}
+      {%if current_user.id == m.id%}
       <a href="{{url_for('manageMembers', workspaceId = workspace.id, subgroupId = subgroup.id)}}">Manage Members</a>
       {%endif%}
+      {%endfor%}
       <c>Members</c>
       <ul>
       {%for m in members%}
+      {% if m.id != workspace.owner%}
       {{m.username}}<br>
+      {%endif%}
       {%endfor%}
     </ul>
 

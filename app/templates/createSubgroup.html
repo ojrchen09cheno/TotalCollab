@@ -93,7 +93,8 @@
     </div>
 
     <div class="content">
-      {% if current_user.id == workspace.owner %}
+      {%for m in workspace.mods%}
+      {%if current_user.id == m.id%}
       <h1> Create a new subgroup</h1>
       <h2> Please enter the name of your new subgroup.
       </h2>
@@ -101,9 +102,8 @@
         <input type="text" name="subgroupName" placeholder="type here ..">
         <button type="Submit"> Submit</button>
       </form>
-      {% else %}
-      <h1>Only a workspace's owner is authorized to add a subgroup!</h1>
       {% endif %}
+      {%endfor%}
     </div>
   </body>
   </html>

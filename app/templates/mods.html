@@ -137,25 +137,25 @@ somemsg {
       </ul>
       {% endif %}
       {% endwith %}</h4>
-      <h3> {{workspace.workspaceName}} Owner: {{owner.username}}</h3>
+      <h3> {{workspace.workspaceName}}</h3>
       <h3> Members </h3>
         <ul>
           {% for w in workMembers%}
-          {% if w != owner%}
+          {% if w != owner %}
           {{w.username}}
-          <form action="{{ url_for('add', workspaceId=workspace.id, subgroupId = subgroup.id, userId = w.id) }}" method="post">
-            <button type="Submit"> Add to Subgroup</button>
+          <form action="{{ url_for('addMod', workspaceId=workspace.id, userId = w.id) }}" method="post">
+            <button type="Submit"> Add Moderator</button>
           </form>
           {%endif%}
           {%endfor%}
       </ul>
-      <h3> Subgroup {{subgroup.name}} Members </h3>
+      <h3> Moderators </h3>
         <ul>
-          {%for s in subMembers%}
+          {%for s in mods%}
           {% if s.id != workspace.owner%}
           {{s.username}}
-          <form action="{{ url_for('kick', workspaceId=workspace.id, subgroupId = subgroup.id, userId = s.id) }}" method="post">
-            <button type="Submit"> Kick</button>
+          <form action="{{ url_for('kickMod', workspaceId=workspace.id, userId = s.id) }}" method="post">
+            <button type="Submit"> Remove Moderator</button>
           </form>
           {%endif%}
           <br>

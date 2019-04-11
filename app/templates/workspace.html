@@ -79,24 +79,28 @@
       <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"></a><br><br>
       <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
       <b>{{workspace.workspaceName}}</b>
-      {% if current_user.id == workspace.owner %}
+      {%for m in workspace.mods%}
+      {%if current_user.id == m.id%}
       Invite Code: {{workspace.code}}
       <form action="{{ url_for('newcode', workspaceId = workspace.id) }}" method="post">
         <button type="Submit"> Generate New Code </button>
       </form>
-      {% endif %}
+      <br>
+      {%endif%}
+      {%endfor%}
+      {% if current_user == owner%}
+      <a href="{{url_for('mods', workspaceId = workspace.id)}}">Manage Moderators</a>
+      {%endif%}
       <c>Subgroups
-        {% if current_user.id == workspace.owner %}
+        {%for m in workspace.mods%}
+        {%if current_user.id == m.id%}
         <a href="{{ url_for('add_subgroup', workspaceId = workspace.id) }}"> Add subgroup here!</a>
         {% endif %}
+        {%endfor%}
       </c>
       <span style="font-size:25px;">
         {% for s in subgroups %}
-        {% for m in s.members%}
-        {% if current_user == m%}
           <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}}</a>
-        {%endif%}
-        {%endfor%}
         {% endfor %}
       </span>
 
@@ -107,7 +111,7 @@
       <c>Members</c>
       <span style="font-size:25px;">
         {% for m in members %}
-        {% if m.username == current_user.username %}
+        {% if m.username == current_user.username%}
         {{m.username}} <br>
         {% else %}
         {{m.username}} <a href="{{url_for('direct',otherUserId=m.id)}}">CHAT WITH THIS PERSON </a> <br>
@@ -134,9 +138,12 @@
         Task Name: {{t.name}}<br>
         Task Description: {{t.description}}<br>
         Deadline: {{ t.deadline_day }} at {{ t.deadline_time}}
-        {% if current_user.id == workspace.owner %}
+        {%for m in workspace.mods%}
+        {%if current_user.id == m.id%}
         <a href="{{ url_for('sendReminder', taskId = t.id, workspaceId = workspace.id) }}"> Send Reminder Email!</a>
-        {% endif %}<br><br>
+        {% endif %}
+        {%endfor%}
+        <br><br>
         {% endfor %}
       </h3>
 

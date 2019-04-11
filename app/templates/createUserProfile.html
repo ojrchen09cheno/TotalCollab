@@ -84,16 +84,20 @@ textarea {
       <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"></a><br><br>
       <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
       <b>{{workspace.workspaceName}}</b>
-      {% if current_user.id == workspace.owner %}
+      {%for m in workspace.mods%}
+      {%if current_user.id == m.id%}
       Invite Code: {{workspace.code}}
       <form action="{{ url_for('newcode', workspaceId = workspace.id) }}" method="post">
         <button type="Submit"> Generate New Code </button>
       </form>
       {% endif %}
+      {%endfor%}
       <c>Subgroups
-        {% if current_user.id == workspace.owner %}
+        {%for m in workspace.mods%}
+        {%if current_user.id == m.id%}
         <a href="{{ url_for('add_subgroup', workspaceId = workspace.id) }}"> Add subgroup here!</a>
         {% endif %}
+        {%endfor%}
       </c>
       <span style="font-size:25px;">
         {% for s in subgroups %}

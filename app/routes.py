@@ -43,6 +43,7 @@ def add_workspace():
                 return redirect(url_for('index'))
         newWorkspace = Workspace(workspaceName = workspaceName, owner = current_user.id)
         newWorkspace.newCode()
+        newWorkspace.mods.append(current_user)
         db.session.add(newWorkspace)
         newWorkspace.members.append(current_user)
         db.session.commit()
@@ -54,7 +55,20 @@ def add_workspace():
 @login_required
 def workspace(workspaceId):
     workspace = Workspace.query.get(workspaceId)
-    subgroups = workspace.subgroups
+    subgroups = []
+    status = False
+    for m in workspace.mods:
+        if current_user == m:
+            subgroups = subGroup.query.all()
+            status=True
+    if status == False:
+        for s in workspace.subgroups:
+            if s.name == 'General':
+                subgroups.append(s)
+            else:
+                for submember in s.members:
+                    if current_user == submember:
+                        subgroups.append(s)
     members = workspace.members
     owner = User.query.get(workspace.owner)
     # form = TaskForm()
@@ -108,10 +122,15 @@ def sendReminder(workspaceId, taskId):
 @login_required
 def add_subgroup(workspaceId):
     workspace = Workspace.query.get(workspaceId)
+    owner = User.query.get(workspace.owner)
     subgroups = workspace.subgroups
     if request.method =="POST":
         subgroupName = request.form.get("subgroupName")
-        workspace.addsubgroup(subgroupName, current_user)
+        for s in subgroups:
+            if subgroupName == s.name:
+                flash("Subgroup Already Exists")
+                return redirect(url_for('add_subgroup', workspaceId = workspaceId))
+        workspace.addsubgroup(subgroupName, owner)
         return redirect(url_for('workspace', workspaceId=workspaceId))
     return render_template('createSubgroup.html', subgroups = subgroups, workspace = workspace)
 
@@ -123,9 +142,8 @@ def subgroup(workspaceId, subgroupId):
     subgroups= workspace.subgroups
     subgroup = subGroup.query.get(subgroupId)
     members = subgroup.members
-    messages = subgroup.messages
     page = request.args.get('page', 1, type=int)
-    messages = Message.query.filter_by(subgroup_id=subgroupId).order_by(Message.timestamp.desc()).paginate(page, app.config['MESSAGES_PER_PAGE'], False)
+    messages = Messages.query.filter_by(subgroup_id=subgroupId).order_by(Messages.timestamp.desc()).paginate(page, app.config['MESSAGES_PER_PAGE'], False)
     return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages, user=current_user, members=members)
 
 @socketio.on('message')
@@ -262,22 +280,10 @@ def search(workspaceId, subgroupId):
     subgroup = subGroup.query.get(subgroupId)
     messages = subgroup.messages
     page = request.args.get('page', 1, type=int)
-    messages, total = Message.search(g.search_form.q.data, page, current_app.config['MESSAGES_PER_PAGE'])
+    messages, total = Messages.search(g.search_form.q.data, page, current_app.config['MESSAGES_PER_PAGE'])
     next_url = url_for('search.html', q=g.search_form.q.data, page=page+1) if total > page * current_app.config['MESSAGES_PER_PAGE'] else None
     prev_url = url_for('search.html', q=g.search_form.q.data, page=page-1) if page > 1 else None
     return render_template('search.html', messages=messages, next_url=next_url, prev_url=prev_url,workspaceId=workspaceId, subgroupId=subgroupId)
-
-#add members to a subgroup
-@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/addMember/", methods=['POST'])
-@login_required
-def subgroupMember(workspaceId,subgroupId):
-    username=request.form.get('username')
-    user = User.query.filter_by(username=username)
-    subgroup = subGroup.query.get(subgroupId)
-    subgroup.members.append(user)
-    db.sesssion.commit()
-    flash("Added member")
-    return redirect(url_for('subgroup'))
 
 #manage members of a subgroup
 @app.route("/workspace/<int:workspaceId>/subgropup/<int:subgroupId>/manageMembers/")
@@ -287,8 +293,17 @@ def manageMembers(workspaceId,subgroupId):
     subgroup = subGroup.query.get(subgroupId)
     subMembers = subgroup.members
     members = workspace.members
+    members = []
+    for m in workspace.members:
+        members.append(m)
     workMembers = []
+    owner = User.query.get(workspace.owner)
+    mods = workspace.mods
     check = True
+    for m in mods:
+        for w in members:
+            if m == w:
+                members.remove(m)
     for w in members:
         for s in subMembers:
             if w == s:
@@ -297,7 +312,7 @@ def manageMembers(workspaceId,subgroupId):
             workMembers.append(w)
         if check==False:
             check=True
-    return render_template('manage.html', workspace = workspace, subgroup=subgroup,subMembers = subMembers,workMembers=workMembers)
+    return render_template('manage.html', workspace = workspace, subgroup=subgroup,subMembers = subMembers,workMembers=workMembers, owner = owner)
 
 
 #Route for adding members to a subgroup
@@ -321,6 +336,49 @@ def kick(workspaceId, subgroupId, userId):
     db.session.commit()
     flash("Kicked member")
     return redirect(url_for('manageMembers', workspaceId= workspaceId, subgroupId=subgroupId))
+
+#manage moderators of a workspace
+@app.route("/workspace/<int:workspaceId>/mods/")
+@login_required
+def mods(workspaceId):
+    workspace = Workspace.query.get(workspaceId)
+    members = workspace.members
+    mods = workspace.mods
+    workMembers = []
+    owner = User.query.get(workspace.owner)
+    check = True
+    for w in members:
+        for m in mods:
+            if w == m:
+                check=False
+        if check==True:
+            workMembers.append(w)
+        if check==False:
+            check=True
+    return render_template('mods.html', workspace = workspace, mods = mods,workMembers=workMembers, owner = owner)
+
+
+#Route for adding moderators
+@app.route("/workspace/<int:workspaceId>/mods/add/<int:userId>/",methods=['POST'])
+@login_required
+def addMod(workspaceId,userId):
+    user = User.query.get(userId)
+    workspace = Workspace.query.get(workspaceId)
+    workspace.mods.append(user)
+    db.session.commit()
+    flash("Added Moderator")
+    return redirect(url_for('mods', workspaceId=workspaceId))
+
+#Route for removing a moderator
+@app.route("/workspace/<int:workspaceId>/mods/kick/<int:userId>/", methods=['POST'])
+@login_required
+def kickMod(workspaceId, userId):
+    user = User.query.get(userId)
+    workspace = Workspace.query.get(workspaceId)
+    workspace.mods.remove(user)
+    db.session.commit()
+    flash("Removed Moderator")
+    return redirect(url_for('mods', workspaceId= workspaceId))
 
 @app.route("/createUserProfile/", methods=["GET", "POST"])
 @login_required

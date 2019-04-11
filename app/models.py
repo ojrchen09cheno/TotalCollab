@@ -65,6 +65,11 @@ subgroupMember = db.Table('subgroupMember',
     db.Column('subgroup_id', db.Integer, db.ForeignKey('subgroup.id'))
 )
 
+mods = db.Table('mods',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('workspace_id', db.Integer, db.ForeignKey('workspace.id'))
+)
+
 
 
 
@@ -76,6 +81,7 @@ class User(UserMixin, db.Model):
     username=db.Column(db.String,nullable=False, unique=True)
     password_hash = db.Column(db.String(128))
     owns = db.relationship("Workspace", backref="user", lazy=True,cascade="all, delete")
+    mods = db.relationship("Workspace", secondary=mods,backref=db.backref('mods', lazy='dynamic'), lazy='dynamic')
     workspaces = db.relationship("Workspace",secondary=subs,backref=db.backref('members', lazy='dynamic'), lazy='dynamic')
     subgroups = db.relationship("subGroup", secondary=subgroupMember, backref=db.backref('members', lazy='dynamic'), lazy='dynamic')
     firstName=db.Column(db.String(20), nullable=True)
@@ -124,16 +130,16 @@ class subGroup(db.Model):
     __tablename__="subgroup"
     id=db.Column(db.Integer,primary_key=True)
     name=db.Column(db.String,nullable=False)
-    messages=db.relationship("Message",backref="subgroup",lazy=True,cascade="all, delete")
+    messages=db.relationship("Messages",backref="subgroup",lazy=True,cascade="all, delete")
     workspaceId=db.Column(db.Integer,db.ForeignKey('workspace.id'),nullable=False)
 
     def addMessage(self,message, user, subgroupId):
-        newMessage=Message(message=message,subgroup_id=subgroupId, message_user_id=user.id, message_username=user.username)
+        newMessage=Messages(message=message,subgroup_id=subgroupId, message_user_id=user.id, message_username=user.username)
         db.session.add(newMessage)
         db.session.commit()
 
 
-class Message(SearchableMixin, db.Model):
+class Messages(SearchableMixin, db.Model):
     __tablename__="message"
     __searchable__=['message']
     id=db.Column(db.Integer,primary_key=True)
