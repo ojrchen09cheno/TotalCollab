@@ -1,0 +1,4 @@
+Use Case: Workspace owner can send reminder emails for each task. Default message plus input from owner for email subject line and 
+additional comments are included in email which renders an html file.
+
+Made some changes to tasks to make it easier to diagnose when an email should be sent
