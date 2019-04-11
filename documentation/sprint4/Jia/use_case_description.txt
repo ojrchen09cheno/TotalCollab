@@ -1,1 +1,1 @@
-Subgroup Members: Manage the members that can interact with a specific subgroup
+Moderators: Owner can add and remove moderators that help him manage the workspace and subgroups.
