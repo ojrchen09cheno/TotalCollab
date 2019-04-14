@@ -164,6 +164,7 @@ function filterFunction() {
    <a href="{{ url_for('login') }}">Login</a>
     {% else %}
     Hi, {{current_user.username}}<br>
+    <a href="{{ url_for('viewUserProfiles') }}">All User Profiles</a>
     <a href="{{ url_for('createUserProfile', username=current_user.username) }}">Create/Edit Your Profile</a>
     <a href="{{ url_for('user', username=current_user.username) }}">View Your Profile</a>
     <br> <a href="{{ url_for('logout') }}">Logout</a>

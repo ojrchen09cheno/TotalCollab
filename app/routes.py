@@ -481,3 +481,53 @@ def f():
     subgroup=subGroup.query.get(1)
     whiteboard=subgroup.whiteboard
     return render_template("OTHERTEST.html", whiteboard=whiteboard)
+
+@app.route("/view-user-profiles/", methods=["GET", "POST"])
+@login_required
+def viewUserProfiles():
+    users = User.query.all()
+    workspaces = Workspace.query.all()
+    return render_template("viewUserProfiles.html", users=users)
+
+@app.route("/search-user-profiles/", methods=["GET", "POST"])
+@login_required
+def searchUserProfiles():
+    if request.method == 'POST':
+        search = request.form.get("search")
+        users=User.query.filter(User.username.contains(search))
+    return render_template("viewUserProfiles.html", users=users, search=search)
+
+@app.route("/invite-workspace/user/<string:username>", methods=["GET", "POST"])
+@login_required
+def inviteUserWorkspace(username):
+    user = User.query.filter_by(username=username).first()
+    workspaces = Workspace.query.all()
+    total_ws = []
+    hide = []
+    show = []
+    for w in workspaces:
+        total_ws.append(w)
+        for m in w.members:
+            if user.id == m.id:
+                hide.append(w)
+    not_member_WS = [i for i in total_ws + hide if i not in total_ws or i not in hide]
+    for s in not_member_WS:
+        if s.owner == current_user.id:
+            show.append(s)
+    return render_template("inviteUserWorkspace.html", user=user, workspaces=workspaces, show=show)
+
+@app.route("/confirm-invite-workspace/user/<string:username>/workspace/<string:workspaceID>", methods=["GET", "POST"])
+@login_required
+def confirmInviteUserWorkspace(username, workspaceID):
+    user = User.query.filter_by(username=username).first()
+    workspace = Workspace.query.filter_by(id=workspaceID).first()
+    if request.method =="POST":
+        workspace = Workspace.query.filter_by(id=workspaceID).first()
+        owner = User.query.get(workspace.owner)
+        message_subject = "Invitation To Workspace: " + workspace.workspaceName
+        msg = Message(subject=message_subject, sender=app.config['MAIL_USERNAME'])
+        msg.html = render_template('emailInviteWorkspace.html', user=user, workspace=workspace, owner=owner)
+        msg.add_recipient(user.email)
+        mail.send(msg)
+        return redirect(url_for('viewUserProfiles'))
+    return render_template("confirmInviteUserWorkspace.html", user=user, workspace=workspace)
