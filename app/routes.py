@@ -147,7 +147,8 @@ def subgroup(workspaceId, subgroupId):
     members = subgroup.members
     page = request.args.get('page', 1, type=int)
     messages = Messages.query.filter_by(subgroup_id=subgroupId).order_by(Messages.timestamp.desc()).paginate(page, app.config['MESSAGES_PER_PAGE'], False)
-    return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages, user=current_user, members=members)
+    whiteboard=subgroup.whiteboard
+    return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages, user=current_user, members=members,whiteboard=whiteboard)
 
 @socketio.on('message')
 def handleMessage(msg):
@@ -442,3 +443,41 @@ def addTask(workspaceId):
         workspace.addTask(name, description, deadline_day, deadline_time, userAssigned.id, workspaceId)
         return redirect(url_for('workspace', workspaceId=workspaceId))
     return render_template('taskboardAdd.html',workspaceId=workspaceId, workspace=workspace)
+
+
+@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/TET", methods=["GET","POST"])
+@login_required
+def drawing(workspaceId,subgroupId):
+    #p=json.dumps(data)
+    #hey=json.loads(p)
+#    print('message: ' + str(data))
+
+    workspace=Workspace.query.get
+    if request.method =='POST':
+        workspace = Workspace.query.get('workspaceId')
+        subgroup = subGroup.query.get('subgroupId')
+        picture=request.get("can")
+        subgroup.addPic(picture,current_user,subgroup.id)
+        return redirect(url_for('subgroup',workspaceId= workspaceId, subgroupId=subgroupId))
+
+
+    return render_template("Drawing.html",workspaceId= workspaceId, subgroupId=subgroupId)
+@app.route("/savedrawing", methods=["POST"])
+def savepic():
+    a=request.form['dataURL']
+    b=request.form['workspaceId']
+    c=request.form['subgroupId']
+
+    print(str(a))
+
+    workspace = Workspace.query.get(b)
+    subgroup = subGroup.query.get(c)
+    subgroup.addPic(a,current_user,c)
+    #save method here
+    return "It's Good?"
+@app.route("/Test2", methods=["GET"])
+def f():
+    workspace=Workspace.query.get(1)
+    subgroup=subGroup.query.get(1)
+    whiteboard=subgroup.whiteboard
+    return render_template("OTHERTEST.html", whiteboard=whiteboard)

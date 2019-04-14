@@ -132,12 +132,26 @@ class subGroup(db.Model):
     id=db.Column(db.Integer,primary_key=True)
     name=db.Column(db.String,nullable=False)
     messages=db.relationship("Messages",backref="subgroup",lazy=True,cascade="all, delete")
+    whiteboard=db.relationship("Whiteboard", backref="subgroup",lazy=True)
     workspaceId=db.Column(db.Integer,db.ForeignKey('workspace.id'),nullable=False)
 
     def addMessage(self,message, user, subgroupId):
         newMessage=Messages(message=message,subgroup_id=subgroupId, message_user_id=user.id, message_username=user.username)
         db.session.add(newMessage)
         db.session.commit()
+
+    def addPic(self,whiteboard,user, subgroupId):
+        newPicture=Whiteboard(picture=whiteboard,subgroup_id=subgroupId,message_user_id=user.id,message_username=user.username)
+        db.session.add(newPicture)
+        db.session.commit()
+
+class Whiteboard(db.Model):
+    __tablename__="whiteboard"
+    id=db.Column(db.Integer,primary_key=True)
+    picture=db.Column(db.String,nullable=False)
+    subgroup_id=db.Column(db.Integer, db.ForeignKey('subgroup.id'),nullable=False)
+    message_user_id=db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    message_username=db.Column(db.Integer, db.ForeignKey('user.username'),nullable=False)
 
 
 class Messages(SearchableMixin, db.Model):
