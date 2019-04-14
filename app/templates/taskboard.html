@@ -1,0 +1,13 @@
+<html>
+<head>
+    <title>Title</title>
+</head>
+<body>
+        {% for t in tasks %}
+        Task Name: {{t.name}}<br>
+        Task Description: {{t.description}}<br>
+        Deadline: {{ t.deadline_day }} at {{ t.deadline_time}} <br>
+        Person ID: {{t.assigned_user }}
+        {% endfor %}
+</body>
+</html>

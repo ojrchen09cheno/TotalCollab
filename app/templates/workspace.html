@@ -122,28 +122,24 @@
 
     <div class="content">
     	<h1> Welcome to your workspace!</h1>
-      <h2>Taskboard
+      <h2>Taskboard <a href="{{url_for('addTask', workspaceId=workspace.id)}}"> Add Task</a>
       </h2>
       <h3>
-        <form action="{{ url_for('workspace', workspaceId = workspace.id) }}" method="post">
-          Task Name: <input type="text" name="name"><br>
-          Task Description: <input type="text" name="description"><br>
-          Task Deadline Day: <input type="date" name="deadline_day"><br>
-          Task Deadline Time: <input type="time" name="deadline_time"><br>
-          <button type="Submit"> Submit</button>
-        </form>
+          <form action="" method="post" novalidate>
+              Filter by Name: <input type="text" name="filterName"><br>
+              <button type="Submit"> Submit</button>
+          </form>
       </h3>
       <h3>
         {% for t in tasks %}
         Task Name: {{t.name}}<br>
         Task Description: {{t.description}}<br>
-        Deadline: {{ t.deadline_day }} at {{ t.deadline_time}}
-        {%for m in workspace.mods%}
-        {%if current_user.id == m.id%}
+        Deadline: {{ t.deadline_day }} at {{ t.deadline_time}} <br>
+        Person assigned: {{t.assigned_person.username }}
+        {% if current_user.id == workspace.owner %}
         <a href="{{ url_for('sendReminder', taskId = t.id, workspaceId = workspace.id) }}"> Send Reminder Email!</a>
-        {% endif %}
-        {%endfor%}
-        <br><br>
+        <a href="{{url_for('taskboardDelete', taskId = t.id, workspaceId = workspace.id) }}"> Delete</a>
+        {% endif %}<br><br>
         {% endfor %}
       </h3>
 

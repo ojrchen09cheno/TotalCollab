@@ -71,16 +71,17 @@ def workspace(workspaceId):
                         subgroups.append(s)
     members = workspace.members
     owner = User.query.get(workspace.owner)
-    # form = TaskForm()
     tasks = workspace.taskboard
+    user = current_user
+    current_Date_Time = datetime.now()
 
     if request.method =="POST":
-        name = request.form.get("name")
-        description = request.form.get("description")
-        deadline_day = request.form.get("deadline_day")
-        deadline_time = request.form.get("deadline_time")
-        workspace.addTask(name, description, deadline_day, deadline_time, workspaceId)
-        return redirect(url_for('workspace', workspaceId=workspaceId))
+        Filter = request.form.get("filterName")
+        userF = User.query.filter_by(username=Filter).first()
+        if userF is not None:
+            tasks = Taskboard.query.filter_by(assigned_user=userF.id)
+            return render_template('workspace.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace,
+                                   members=members, owner=owner, tasks=tasks, user=user)
 
     # if form.validate_on_submit():
     #     task = Taskboard(tasks=form.tasks.data, workspaceId=workspaceId)
@@ -88,7 +89,9 @@ def workspace(workspaceId):
     #     db.session.commit()
     #     flash('Task added')
     #     return redirect(url_for('workspace', workspaceId=workspaceId))
-    return render_template('workspace.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace, members=members, owner=owner, tasks=tasks)
+    return render_template('workspace.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace,
+                           members=members, owner=owner, tasks=tasks, user=user)
+
 
 @app.route('/workspace/<int:workspaceId>/reminder/task/<int:taskId>/', methods=['GET','POST'])
 def sendReminder(workspaceId, taskId):
@@ -402,3 +405,40 @@ def createUserProfile():
 def user(username):
     user= User.query.filter_by(username=username).first()
     return render_template('userProfile.html', user=user, workspace=workspace)
+
+
+@app.route("/<int:workspaceId>/<int:taskId>/taskboardDelete", methods=['GET', 'POST'])
+@login_required
+def taskboardDelete(workspaceId, taskId):
+
+    if request.method =="POST":
+        workspace = Workspace.query.get(workspaceId)
+        task = Taskboard.query.get(taskId)
+        Taskboard.deleteTask(task)
+        return redirect(url_for('workspace', workspaceId=workspaceId))
+    return render_template('taskboardDelete.html', workspaceId=workspaceId)
+
+@app.route("/<int:workspaceId>/<int:userId>/personalTasks", methods=['GET', 'POST'])
+@login_required
+def showPerTask(workspaceId, userId):
+    tasks = Taskboard.query.filter_by(assigned_user=userId)
+    return render_template('taskboard.html', workspaceId=workspaceId, tasks=tasks)
+
+@app.route("/<int:workspaceId>/addTask", methods=['GET', 'POST'])
+@login_required
+def addTask(workspaceId):
+    workspace = Workspace.query.get(workspaceId)
+    subgroups = workspace.subgroups
+    members = workspace.members
+    owner = User.query.get(workspace.owner)
+    tasks = workspace.taskboard
+    if request.method =="POST":
+        name = request.form.get("name")
+        description = request.form.get("description")
+        deadline_day = request.form.get("deadline_day")
+        deadline_time = request.form.get("deadline_time")
+        assigned_user = request.form.get("assigned_user")
+        userAssigned = User.query.filter_by(username=assigned_user).first()
+        workspace.addTask(name, description, deadline_day, deadline_time, userAssigned.id, workspaceId)
+        return redirect(url_for('workspace', workspaceId=workspaceId))
+    return render_template('taskboardAdd.html',workspaceId=workspaceId, workspace=workspace)

@@ -88,6 +88,7 @@ class User(UserMixin, db.Model):
     lastName=db.Column(db.String(20), nullable=True)
     location=db.Column(db.String(30), nullable=True)
     about_me=db.Column(db.Text(), nullable=True)
+    assignee = db.relationship('Taskboard', backref='assigned_person', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -121,8 +122,8 @@ class Workspace(db.Model):
         self.code = ''.join(random.choice(chars) for _ in range(size))
         db.session.commit()
 
-    def addTask(self, name, description, deadline_day, deadline_time, workspaceId):
-        newTask=Taskboard(name=name, description=description, deadline_day=deadline_day, deadline_time=deadline_time, workspaceId=self.id)
+    def addTask(self, name, description, deadline_day, deadline_time, assigned_user, workspaceId):
+        newTask=Taskboard(name=name, description=description, deadline_day=deadline_day, deadline_time=deadline_time, assigned_user=assigned_user, workspaceId=self.id)
         db.session.add(newTask)
         db.session.commit()
 
@@ -159,6 +160,16 @@ class Taskboard(db.Model):
     deadline_time=db.Column(db.String)
     workspaceId=db.Column(db.Integer, db.ForeignKey('workspace.id'), nullable=False)
     workspace = db.relationship("Workspace", backref='tasks')
+    assigned_user = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def addTask(self, name, description, deadline_day, deadline_time, assigned_user, workspaceId):
+        task = Taskboard(name=name, description=description, deadline_day=deadline_day, deadline_time=deadline_time, assigned_user=assigned_user, workspaceId=workspaceId)
+        db.session.add(task)
+        db.session.commit()
+
+    def deleteTask(self):
+        db.session.delete(self)
+        db.session.commit()
 
 
 class Direct(db.Model):
