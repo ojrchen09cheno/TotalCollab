@@ -485,8 +485,8 @@ def f():
 @app.route("/view-user-profiles/", methods=["GET", "POST"])
 @login_required
 def viewUserProfiles():
-    users = User.query.all()
-    workspaces = Workspace.query.all()
+    page = request.args.get('page', 1, type=int)
+    users = User.query.paginate(page, app.config['USERS_PER_PAGE'], False)
     return render_template("viewUserProfiles.html", users=users)
 
 @app.route("/search-user-profiles/", methods=["GET", "POST"])
@@ -495,7 +495,7 @@ def searchUserProfiles():
     if request.method == 'POST':
         search = request.form.get("search")
         users=User.query.filter(User.username.contains(search))
-    return render_template("viewUserProfiles.html", users=users, search=search)
+    return render_template("viewUserProfilesSearch.html", users=users, search=search)
 
 @app.route("/invite-workspace/user/<string:username>", methods=["GET", "POST"])
 @login_required
