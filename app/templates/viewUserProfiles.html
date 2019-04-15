@@ -1,36 +1,115 @@
 <html>
 <head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-</head>
-<body>
-  <a href="{{ url_for('viewUserProfiles') }}" class="btn btn-primary"> All User Profiles </a>
-  <a href="{{ url_for('createUserProfile', username=current_user.username) }}" class="btn btn-primary"> Create/Edit Your Profile </a>
-  <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-primary"> View Your Profile </a>
+<title> View User Profiles | Total Collab </title>
+<meta name= "viewport" content= "width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<style>
+  .sidenav {
+    height: 100%;
+    width: 20%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #B0C4DE;
+    overflow-x: hidden;
+  }
+  .sidenav a {
+    color: white;
+    font-size: 20px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 20px;
+  }
+  .sidenav b {
+    color: white;
+    font-size: 45px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 85px;
+  }
+  .sidenav c {
+    color: white;
+    font-size: 30px;
+    text-align: left;
+    font-family: 'PT Sans' sans-serif;
+    text-decoration: none;
+    display: block;
+    padding-top: 45px;
+  }
+  h1{
+    font size: 60px;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    padding-top: 200px;
+    padding-left: 400px;
+  }
+  h2{
+    font size: 40px;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    padding-top: 40px;
+    padding-left: 400px;
+  }
+  h3{
+    text-align: center;
+    padding-left: 250px;
+  }
+  img{
+    float: left;
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+  }
+ input {
+   font-size: 25px;
+   text-align: left;
+ }
+  </style>
+  </head>
+  <body>
 
-  <form action="{{ url_for('searchUserProfiles') }}" method="post">
-    <input type="text" placeholder="Search Username..." name="search">
-    <button type="Submit"> <i class="fas fa-search"></i> </button>
-  </form>
+    <div class="sidenav">
+      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"></a><br><br>
+    </div>
 
-{% for u in users %}
-<div class="card" style="width: 30rem;">
-  <!-- <img class="card-img-top" style="width: 100px, height: 200px" src="" alt="Card image cap"> -->
-  <div class="card-body">
-    <h5 class="card-title"><b>{{u.username}}</b></h5>
-    <div class="card-text">
-      First Name: {{u.firstName}}<br>
-      Last Name: {{u.lastName}}<br>
-      Location: {{u.location}}<br>
-      About Me: {{u.about_me}}<br><br>
+    <div align="right">
+      <a href="{{ url_for('viewUserProfiles') }}" class="btn btn-primary"> All User Profiles </a>
+      <a href="{{ url_for('createUserProfile', username=current_user.username) }}" class="btn btn-primary"> Create/Edit Your Profile </a>
+      <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-primary"> View Your Profile </a>
+
+      <form action="{{ url_for('searchUserProfiles') }}" method="post">
+        <input type="text" placeholder="Search Username..." name="search">
+        <button type="Submit"> <i class="fas fa-search fa-2x"></i> </button>
+      </form>
+    </div>
+
+    <div align="center">
+    {% for u in users %}
+    <div class="card" align="left" style="width: 30rem;">
+      <!-- <img class="card-img-top" style="width: 100px, height: 200px" src="" alt="Card image cap"> -->
+      <div class="card-body">
+        <h5 class="card-title"><b>{{u.username}}</b></h5>
+        <div class="card-text">
+          First Name: {{u.firstName}}<br>
+          Last Name: {{u.lastName}}<br>
+          Location: {{u.location}}<br>
+          About Me: {{u.about_me}}<br><br>
+          </div>
+            {% if u != current_user %}
+              <a href="{{ url_for('inviteUserWorkspace', username=u.username ) }}" class="btn btn-primary"> Invite to Workspace! </a>
+            {% endif %}
       </div>
-        {% if u != current_user %}
-          <a href="{{ url_for('inviteUserWorkspace', username=u.username ) }}" class="btn btn-primary"> Invite to Workspace! </a>
-        {% endif %}
-  </div>
-</div>
-<br><br>
-{% endfor %}
-</body>
-</html>
+    </div>
+    <br><br>
+    {% endfor %}
+    </div>
+  </body>
+  </html>
