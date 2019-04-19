@@ -1,4 +1,2 @@
-Use Case: Workspace owner can send reminder emails for each task. Default message plus input from owner for email subject line and 
-additional comments are included in email which renders an html file.
+Use Case: Can view all user profiles as well as search for users profiles who's username contains the search key. Can also send email invitation sto workspaces to users who are not current a member of your workspace. Only workspace owner's can send these emails
 
-Made some changes to tasks to make it easier to diagnose when an email should be sent
