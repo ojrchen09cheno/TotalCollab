@@ -127,10 +127,6 @@ class Workspace(db.Model):
         db.session.add(newTask)
         db.session.commit()
 
-    def transferOwnership(self, user):
-        self.owner = user.id
-        db.session.commit()        
-
 class subGroup(db.Model):
     __tablename__="subgroup"
     id=db.Column(db.Integer,primary_key=True)

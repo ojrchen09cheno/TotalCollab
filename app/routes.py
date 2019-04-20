@@ -250,29 +250,6 @@ def confirmLeaveWorkspace(workspaceId):
     db.session.commit()
     return redirect(url_for('index'))
 
-@app.route("/transfer-ownership-workspace/<int:workspaceId>/", methods=['GET', 'POST'])
-@login_required
-def transferOwnershipWorkspace(workspaceId):
-    workspace = Workspace.query.filter_by(id=workspaceId).first()
-    members = workspace.members
-    if request.method =="POST":
-        transferTo = request.form.get("transferTo")
-        user = User.query.filter_by(id=transferTo).first()
-        return redirect(url_for('confirmTransferOwnershipWorkspace', workspaceId=workspace.id, userId=user.id))
-    return render_template('transferOwnershipWorkspace.html', workspace=workspace, members=members)
-
-@app.route("/confirm-transfer-ownership-workspace/<int:workspaceId>/user/<int:userId>", methods=['GET','POST'])
-@login_required
-def confirmTransferOwnershipWorkspace(workspaceId, userId):
-    workspace = Workspace.query.filter_by(id=workspaceId).first()
-    user = User.query.filter_by(id=userId).first()
-    if request.method=="POST":
-        workspace.transferOwnership(user)
-        workspace.mods.append(current_user.id)
-        db.session.commit()
-        return redirect(url_for('workspace', workspaceId=workspaceId))
-    return render_template('confirmTransferOwnershipWorkspace.html', workspace=workspace, user=user)
-
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
