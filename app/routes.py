@@ -19,8 +19,17 @@ def before_request():
         g.search_form = SearchForm()
     g.locale = str()
 
-#index route
 @app.route('/')
+@app.route('/about/')
+def aboutTotalCollab():
+    totalUsers=User.query.count()
+    totalWorkspaces=Workspace.query.count()
+    totalWsMessages=Messages.query.count()
+    totalDmMessages=DirectMessage.query.count()
+    totalMessages=totalWsMessages+totalDmMessages
+    return render_template('aboutTotalCollab.html', totalUsers=totalUsers, totalWorkspaces=totalWorkspaces, totalMessages=totalMessages)
+
+#index route
 @app.route('/index/')
 def index():
     workspaces = []
@@ -225,6 +234,44 @@ def joinworkspace():
     #   def is_following(self, user):
     #    return self.followed.filter(
     #    followers.c.followed_id == user.id).count() > 0
+
+@app.route("/leave-workspace/<int:workspaceId>/", methods=['GET', 'POST'])
+@login_required
+def leaveWorkspace(workspaceId):
+    workspace = Workspace.query.filter_by(id=workspaceId).first()
+    return render_template('confirmLeaveWorkspace.html', workspace=workspace)
+
+@app.route("/confirm-leave-workspace/<int:workspaceId>/", methods=['POST'])
+@login_required
+def confirmLeaveWorkspace(workspaceId):
+    user = User.query.get(current_user.id)
+    workspace = Workspace.query.filter_by(id=workspaceId).first()
+    workspace.members.remove(user)
+    db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route("/transfer-ownership-workspace/<int:workspaceId>/", methods=['GET', 'POST'])
+@login_required
+def transferOwnershipWorkspace(workspaceId):
+    workspace = Workspace.query.filter_by(id=workspaceId).first()
+    members = workspace.members
+    if request.method =="POST":
+        transferTo = request.form.get("transferTo")
+        user = User.query.filter_by(id=transferTo).first()
+        return redirect(url_for('confirmTransferOwnershipWorkspace', workspaceId=workspace.id, userId=user.id))
+    return render_template('transferOwnershipWorkspace.html', workspace=workspace, members=members)
+
+@app.route("/confirm-transfer-ownership-workspace/<int:workspaceId>/user/<int:userId>", methods=['GET','POST'])
+@login_required
+def confirmTransferOwnershipWorkspace(workspaceId, userId):
+    workspace = Workspace.query.filter_by(id=workspaceId).first()
+    user = User.query.filter_by(id=userId).first()
+    if request.method=="POST":
+        workspace.transferOwnership(user)
+        workspace.mods.append(current_user.id)
+        db.session.commit()
+        return redirect(url_for('workspace', workspaceId=workspaceId))
+    return render_template('confirmTransferOwnershipWorkspace.html', workspace=workspace, user=user)
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
