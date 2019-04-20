@@ -79,6 +79,11 @@
       <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"></a><br><br>
       <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
       <b>{{workspace.workspaceName}}</b>
+      {% if current_user.id == workspace.owner %}
+      <a href="{{url_for('transferOwnershipWorkspace', workspaceId = workspace.id) }}">Transfer {{workspace.workspaceName}}'s Ownership!</a>
+      {% else %}
+      <a href="{{url_for('leaveWorkspace', workspaceId = workspace.id) }}">Leave {{workspace.workspaceName}}!</a>
+      {% endif %}
       {%for m in workspace.mods%}
       {%if current_user.id == m.id%}
       Invite Code: {{workspace.code}}

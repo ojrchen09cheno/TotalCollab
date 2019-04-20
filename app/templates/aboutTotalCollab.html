@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #B0C4DE;
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+}
+/* Float four columns side by side */
+.column {
+  float: left;
+  width: 25%;
+  padding: 0 5px;
+}
+
+.row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the counter cards */
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #878b91;
+  color: white;
+  font-size: 30px;
+  height: 325px;
+}
+
+.fa {font-size:50px;}
+
+a:link, a:visited {
+  background-color: #0048ff;
+  color: white;
+  padding: 15px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.content{
+    color:white;
+    margin: auto;
+    width: 50%;
+}
+</style>
+</head>
+<body>
+
+<div align="right">
+  <a href="{{ url_for('login') }}">Login</a>
+  <a href="{{ url_for('register') }}">Register</a>
+</div>
+
+<img border="0" alt="TC Logo" src="/static/tclogo2.png"</a><br><br>
+
+<div class="content">
+<h1 align="center"> Who Are We?</h1>
+<h3> TotalCollab is not your ordinary messaging application.<br>
+  Common uses of TotalCollab include:
+  <li>School Projects</li>
+  <li>Athletic Teams</li>
+  <li>Communicating With Friends</li>
+  <li>Business Teams</li>
+  The list can go on and on because we are so diverse!</h3>
+<h1 align="center"> What Do We Offer?</h1>
+<h3>Workspaces:
+  <li>A place where groups get to collaborate!</li>
+  <li>Anybody can create one!</li>
+  <li>Invite Code required to join an existing workspace!</li><br>
+  Subgroups:
+  <li>A chat room within a workspace!</li>
+  <li>Workspace Owner and Moderators determine who has access to each subgroup!</li><br>
+  Whiteboard:
+  <li>Having trouble explaining your ideas with words? Look no further! Use our whiteboard feature to sketch out what you're trying to say.</li><br>
+  Taskboard:
+  <li>Assign tasks within each workspace to a specific member!</li>
+  <li>Workspace owner can send personalized email reminders!</li><br>
+  User Profiles:
+  <li>Tell everyone a little about yourself!</li>
+  <li>Easily search and invite other users to your workspace!</li><br>
+</div>
+
+<div class="row">
+  <div class="column">
+    <div class="card">
+      <p><i class="fa fa-laptop-code"></i></p>
+      <h3>5</h3>
+      <p><b>Awesome<br>Developers</b></p>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="card">
+      <p><i class="fa fa-laugh-beam"></i></p>
+      <h3>{{totalUsers}}</h3>
+      <p><b>Happy<br>Users</b></p>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="card">
+      <p><i class="fa fa-users"></i></p>
+      <h3>{{totalWorkspaces}}</h3>
+      <p><b>Productive<br>Workspaces</b></p>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="card">
+      <p><i class="fa fa-comments"></i></p>
+      <h3>{{totalMessages}}</h3>
+      <p><b>Essential<br>Messages</b></p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
