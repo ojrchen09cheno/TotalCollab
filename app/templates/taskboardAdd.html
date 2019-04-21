@@ -8,7 +8,11 @@
           Task Description: <input type="text" name="description"><br>
           Task Deadline Day: <input type="date" name="deadline_day"><br>
           Task Deadline Time: <input type="time" name="deadline_time"><br>
-          Task Person Assigned: <input type="text" name="assigned_user"><br>
+          Task Person Assigned: <select name="assigned_user" size="1">
+          {% for m in members %}
+          <option value="{{m.id}}">{{m.username}}</option>
+          {% endfor %}
+        </select><br>
           <button type="Submit"> Submit</button>
           </form>
 </body>

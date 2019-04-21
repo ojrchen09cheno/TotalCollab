@@ -138,10 +138,12 @@
         Task Name: {{t.name}}<br>
         Task Description: {{t.description}}<br>
         Deadline: {{ t.deadline_day }} at {{ t.deadline_time}} <br>
-        Person assigned: {{t.assigned_person.username }}
+        Person assigned: {{t.assigned_person.username }}<br>
         {% if current_user.id == workspace.owner %}
-        <a href="{{ url_for('sendReminder', taskId = t.id, workspaceId = workspace.id) }}"> Send Reminder Email!</a>
-        <a href="{{url_for('taskboardDelete', taskId = t.id, workspaceId = workspace.id) }}"> Delete</a>
+        Send Reminder Email to:
+        <a href="{{ url_for('sendReminderEveryone', taskId = t.id, workspaceId = workspace.id) }}"> All Workspace Members</a> or
+        <a href="{{ url_for('sendReminderAssigned', taskId = t.id, workspaceId = workspace.id, assigned_person=t.assigned_person.username) }}"> {{t.assigned_person.username}}</a><br>
+        <a href="{{url_for('taskboardDelete', taskId = t.id, workspaceId = workspace.id) }}"> Delete Task </a>
         {% endif %}<br><br>
         {% endfor %}
       </h3>

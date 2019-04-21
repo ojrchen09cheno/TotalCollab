@@ -102,13 +102,12 @@ def workspace(workspaceId):
                            members=members, owner=owner, tasks=tasks, user=user)
 
 
-@app.route('/workspace/<int:workspaceId>/reminder/task/<int:taskId>/', methods=['GET','POST'])
-def sendReminder(workspaceId, taskId):
+@app.route('/workspace/<int:workspaceId>/reminder/task/<int:taskId>/everyone', methods=['GET','POST'])
+def sendReminderEveryone(workspaceId, taskId):
         workspace = Workspace.query.get(workspaceId)
         subgroups = workspace.subgroups
         members = workspace.members
         owner = User.query.get(workspace.owner)
-        # form = TaskForm()
         tasks = workspace.taskboard
         taskId = taskId
         if request.method =="POST":
@@ -128,6 +127,25 @@ def sendReminder(workspaceId, taskId):
                     conn.send(msg)
             return redirect(url_for('workspace', workspaceId=workspaceId))
         return render_template('sendReminder.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace, members=members, owner=owner, tasks=tasks, taskId=taskId)
+
+@app.route('/workspace/<int:workspaceId>/reminder/task/<int:taskId>/<string:assigned_person>', methods=['GET','POST'])
+def sendReminderAssigned(workspaceId, taskId, assigned_person):
+        workspace = Workspace.query.get(workspaceId)
+        subgroups = workspace.subgroups
+        members = workspace.members
+        user = User.query.filter_by(username=assigned_person).first()
+        owner = User.query.get(workspace.owner)
+        tasks = workspace.taskboard
+        taskId = taskId
+        if request.method =="POST":
+            message_subject = request.form.get("message_subject")
+            message_content = request.form.get("message_content")
+            msg = Message(subject=message_subject, sender=app.config['MAIL_USERNAME'])
+            msg.html = render_template('emailReminder.html', username=user.username, message_content=message_content, tasks=tasks, taskId=taskId, owner=owner, workspace=workspace)
+            msg.add_recipient(user.email)
+            mail.send(msg)
+            return redirect(url_for('workspace', workspaceId=workspaceId))
+        return render_template('sendReminder.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace, members=members, owner=owner, tasks=tasks, taskId=taskId, assigned_person=assigned_person)
 
 #create subgroup route
 @app.route("/workspace/<int:workspaceId>/add-subgroup/", methods=["GET","POST"])
@@ -463,10 +481,10 @@ def addTask(workspaceId):
         deadline_day = request.form.get("deadline_day")
         deadline_time = request.form.get("deadline_time")
         assigned_user = request.form.get("assigned_user")
-        userAssigned = User.query.filter_by(username=assigned_user).first()
+        userAssigned = User.query.filter_by(id=assigned_user).first()
         workspace.addTask(name, description, deadline_day, deadline_time, userAssigned.id, workspaceId)
         return redirect(url_for('workspace', workspaceId=workspaceId))
-    return render_template('taskboardAdd.html',workspaceId=workspaceId, workspace=workspace)
+    return render_template('taskboardAdd.html',workspaceId=workspaceId, workspace=workspace, members=members)
 
 
 @app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/TET", methods=["GET","POST"])

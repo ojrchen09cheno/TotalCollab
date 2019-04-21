@@ -125,16 +125,25 @@
         {% if t.id == taskId %}
         Task Name: {{t.name}}<br>
         Task Description: {{t.description}}<br>
-        Deadline: {{ t.deadline }}
+        Deadline: {{ t.deadline_day }} at {{ t.deadline_time}}<br>
+        Person assigned: {{t.assigned_person.username }}<br>
         {% endif %}
         {% endfor %}
       </h3>
       <h3>
-        <form action="{{ url_for('sendReminder', workspaceId = workspace.id, taskId=taskId) }}" method="post">
+        {% if assigned_person %}
+        <form action="{{ url_for('sendReminderAssigned', workspaceId = workspace.id, taskId=taskId, assigned_person=assigned_person) }}" method="post">
           Email Subject Line: <br><input type="text" name="message_subject"><br>
           Email Message: <br><textarea rows="10" cols="50" name="message_content"></textarea><br>
           <button type="Submit"> Submit</button>
         </form>
+        {% else %}
+        <form action="{{ url_for('sendReminderEveryone', workspaceId = workspace.id, taskId=taskId) }}" method="post">
+          Email Subject Line: <br><input type="text" name="message_subject"><br>
+          Email Message: <br><textarea rows="10" cols="50" name="message_content"></textarea><br>
+          <button type="Submit"> Submit</button>
+        </form>
+        {% endif %}
       </h3>
     </div>
   </body>
