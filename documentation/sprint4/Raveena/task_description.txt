@@ -1,1 +1,1 @@
-Display which users are offline 
+Display which users are online 
