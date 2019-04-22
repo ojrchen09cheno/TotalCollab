@@ -92,7 +92,8 @@
     </div>
 
     <div align="center">
-    {% for u in users %}
+    <h5>Showing search results for all usernames containing <b>{{search}}</b></h5><br><br>
+    {% for u in users.items %}
     <div class="card" align="left" style="width: 30rem;">
       <!-- <img class="card-img-top" style="width: 100px, height: 200px" src="" alt="Card image cap"> -->
       <div class="card-body">
@@ -110,6 +111,28 @@
     </div>
     <br><br>
     {% endfor %}
+
+    {% if users.has_prev %}
+    <a href="{{ url_for('searchUserProfiles', search=search, page=users.prev_num) }}">  <i class="fas fa-arrow-left fa-3x"></i></a>
+    {% endif %}
+
+    {% for page in users.iter_pages(left_edge=1, left_current=1, right_current=2, right_edge=1) %}
+
+      {% if page %}
+        {% if users.page == page %}
+          <a class="btn btn-info mb-4" href="{{ url_for('searchUserProfiles', search=search, page=page) }}">{{ page }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('searchUserProfiles', search=search, page=page) }}">{{ page }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+
+    {% if users.has_next %}
+    <a href="{{ url_for('searchUserProfiles', search=search, page=users.next_num) }}">  <i class="fas fa-arrow-right fa-3x"></i></a>
+    {% endif %}
+
     </div>
   </body>
   </html>
