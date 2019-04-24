@@ -2,9 +2,35 @@
 <head>
     <title>Title</title>
 </head>
-<body>
+<style>
+  body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #B0C4DE;
+}
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 70px 0;
+  text-align: center;
+}
+</style>
+
+<body align="center">
+<h1>
+    Are you sure you want to Delete this task?
+</h1>
+<div>
+        Task Name: {{task.name}}<br>
+        Task Description: {{task.description}}<br>
+        Deadline: {{ task.deadline_day }} at {{ task.deadline_time}} <br>
+        Person assigned: {{task.assigned_person.username }}<br>
     <form action="" method="post">
-        <button type="Submit"> Submit</button>
+        <button type="Submit"> Yes</button>
     </form>
+    <form action="{{url_for('workspace', workspaceId=workspace.id)}}">
+        <button type="submit"> No</button>
+    </form>
+</div>
 </body>
 </html>

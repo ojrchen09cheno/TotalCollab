@@ -454,12 +454,12 @@ def user(username):
 @login_required
 def taskboardDelete(workspaceId, taskId):
 
+    workspace = Workspace.query.get(workspaceId)
+    task = Taskboard.query.get(taskId)
     if request.method =="POST":
-        workspace = Workspace.query.get(workspaceId)
-        task = Taskboard.query.get(taskId)
         Taskboard.deleteTask(task)
         return redirect(url_for('workspace', workspaceId=workspaceId))
-    return render_template('taskboardDelete.html', workspaceId=workspaceId)
+    return render_template('taskboardDelete.html', workspaceId=workspaceId, workspace=workspace, task=task)
 
 @app.route("/<int:workspaceId>/<int:userId>/personalTasks", methods=['GET', 'POST'])
 @login_required
