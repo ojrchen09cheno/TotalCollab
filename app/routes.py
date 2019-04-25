@@ -560,6 +560,11 @@ def inviteUserWorkspace(username):
     for s in not_member_WS:
         if s.owner == current_user.id:
             show.append(s)
+        else:
+            mods = s.mods
+            for mod in mods:
+                if mod == current_user:
+                    show.append(s)
     return render_template("inviteUserWorkspace.html", user=user, workspaces=workspaces, show=show)
 
 @app.route("/confirm-invite-workspace/user/<string:username>/workspace/<string:workspaceID>", methods=["GET", "POST"])
