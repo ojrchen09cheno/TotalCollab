@@ -106,6 +106,7 @@
           </div>
             {% if u != current_user %}
               <a href="{{ url_for('inviteUserWorkspace', username=u.username ) }}" class="btn btn-primary"> Invite to Workspace! </a>
+              <a href="{{url_for('direct',otherUserId=u.id)}}" class="btn btn-primary"> Direct Message </a>
             {% endif %}
       </div>
     </div>
