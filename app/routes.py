@@ -88,7 +88,7 @@ def workspace(workspaceId):
         Filter = request.form.get("filterName")
         userF = User.query.filter_by(username=Filter).first()
         if userF is not None:
-            tasks = Taskboard.query.filter_by(assigned_user=userF.id)
+            tasks = Taskboard.query.filter_by(assigned_user=userF.id, workspaceId=workspaceId)
             return render_template('workspace.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace,
                                    members=members, owner=owner, tasks=tasks, user=user)
 
@@ -107,7 +107,6 @@ def sendReminderEveryone(workspaceId, taskId):
         workspace = Workspace.query.get(workspaceId)
         subgroups = workspace.subgroups
         members = workspace.members
-        owner = User.query.get(workspace.owner)
         tasks = workspace.taskboard
         taskId = taskId
         if request.method =="POST":
@@ -123,7 +122,7 @@ def sendReminderEveryone(workspaceId, taskId):
                     message_subject = request.form.get("message_subject")
                     message_content = request.form.get("message_content")
                     msg = Message(recipients=[m.email], sender=app.config['MAIL_USERNAME'], subject=message_subject)
-                    msg.html = render_template('emailReminder.html', username=m.username, message_content=message_content, tasks=tasks, taskId=taskId, owner=owner, workspace=workspace)
+                    msg.html = render_template('emailReminder.html', username=m.username, message_content=message_content, tasks=tasks, taskId=taskId, workspace=workspace)
                     conn.send(msg)
             return redirect(url_for('workspace', workspaceId=workspaceId))
         return render_template('sendReminder.html', workspaceId=workspaceId, subgroups=subgroups, workspace=workspace, members=members, owner=owner, tasks=tasks, taskId=taskId)
@@ -134,14 +133,13 @@ def sendReminderAssigned(workspaceId, taskId, assigned_person):
         subgroups = workspace.subgroups
         members = workspace.members
         user = User.query.filter_by(username=assigned_person).first()
-        owner = User.query.get(workspace.owner)
         tasks = workspace.taskboard
         taskId = taskId
         if request.method =="POST":
             message_subject = request.form.get("message_subject")
             message_content = request.form.get("message_content")
             msg = Message(subject=message_subject, sender=app.config['MAIL_USERNAME'])
-            msg.html = render_template('emailReminder.html', username=user.username, message_content=message_content, tasks=tasks, taskId=taskId, owner=owner, workspace=workspace)
+            msg.html = render_template('emailReminder.html', username=user.username, message_content=message_content, tasks=tasks, taskId=taskId, workspace=workspace)
             msg.add_recipient(user.email)
             mail.send(msg)
             return redirect(url_for('workspace', workspaceId=workspaceId))

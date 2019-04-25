@@ -143,8 +143,16 @@
         Send Reminder Email to:
         <a href="{{ url_for('sendReminderEveryone', taskId = t.id, workspaceId = workspace.id) }}"> All Workspace Members</a> or
         <a href="{{ url_for('sendReminderAssigned', taskId = t.id, workspaceId = workspace.id, assigned_person=t.assigned_person.username) }}"> {{t.assigned_person.username}}</a><br>
-        <a href="{{url_for('taskboardDelete', taskId = t.id, workspaceId = workspace.id) }}"> Delete Task </a>
-        {% endif %}<br><br>
+        <a href="{{url_for('taskboardDelete', taskId = t.id, workspaceId = workspace.id) }}"> Delete Task</a><br><br>
+        {% endif %}
+        {% if current_user.id != workspace.owner %}
+        {% for m in workspace.mods %}
+        {% if m == current_user %}
+        Send Reminder Email to:
+        <a href="{{ url_for('sendReminderEveryone', taskId = t.id, workspaceId = workspace.id) }}"> All Workspace Members</a> or
+        <a href="{{ url_for('sendReminderAssigned', taskId = t.id, workspaceId = workspace.id, assigned_person=t.assigned_person.username) }}"> {{t.assigned_person.username}}</a><br>
+        <a href="{{url_for('taskboardDelete', taskId = t.id, workspaceId = workspace.id) }}"> Delete Task</a>
+        {% endif %}{% endfor %}{% endif %}<br><br>
         {% endfor %}
       </h3>
 
