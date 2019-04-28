@@ -117,6 +117,26 @@ somemsg {
   padding-left: 400px:
 
  }
+ .grid-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  background-color: white;
+  padding: 10px;
+}
+.grid-item {
+  background-color: white;
+  border: 1px solid white;
+  padding: 20px;
+  font-size: 30px;
+  text-align: left;
+}
+.grid-item2 {
+  background-color: white;
+  border: 1px solid white;
+  padding: 20px;
+  font-size: 30px;
+  text-align: left;
+}
 
   </style>
   </head>
@@ -139,28 +159,24 @@ somemsg {
       {% endwith %}</h4>
       <h3> {{workspace.workspaceName}} Owner: {{owner.username}}</h3>
       <h3> Members </h3>
-        <ul>
-          {% for w in workMembers%}
-          {% if w != owner%}
-          {{w.username}}
-          <form action="{{ url_for('add', workspaceId=workspace.id, subgroupId = subgroup.id, userId = w.id) }}" method="post">
-            <button type="Submit"> Add to Subgroup</button>
-          </form>
-          {%endif%}
-          {%endfor%}
-      </ul>
+      <div class="grid-container">
+        {% for w in workMembers%}
+        {% if w != owner%}
+      <div class="grid-item">{{w.username}}</div>
+      <div class="grid-item2"><form action="{{ url_for('add', workspaceId=workspace.id, subgroupId = subgroup.id, userId = w.id) }}" method="post">
+        <button type="Submit" class="btn btn-success">Add to Subgroup</button></form></div>
+        {%endif%}
+        {%endfor%}
+      </div>
       <h3> Subgroup {{subgroup.name}} Members </h3>
-        <ul>
+      <div class="grid-container">
           {%for s in subMembers%}
           {% if s.id != workspace.owner%}
-          {{s.username}}
-          <form action="{{ url_for('kick', workspaceId=workspace.id, subgroupId = subgroup.id, userId = s.id) }}" method="post">
-            <button type="Submit"> Kick</button>
-          </form>
+        <div class="grid-item">{{s.username}}</div>
+        <div class="grid-item2"><form action="{{ url_for('kick', workspaceId=workspace.id, subgroupId = subgroup.id, userId = s.id) }}" method="post">
+            <button type="Submit" class="btn btn-danger">Remove from Subgroup</button></form></div>
           {%endif%}
-          <br>
           {%endfor%}
-      </ul>
       </div>
 
   </body>

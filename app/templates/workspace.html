@@ -92,7 +92,7 @@
       {%endif%}
       {%endfor%}
       {% if current_user == owner%}
-      <a href="{{url_for('mods', workspaceId = workspace.id)}}">Manage Moderators</a>
+      <a href="{{url_for('mods', workspaceId = workspace.id)}}">Manage Members</a>
       {%endif%}
       <c>Subgroups
         {%for m in workspace.mods%}

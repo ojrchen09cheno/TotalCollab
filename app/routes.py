@@ -262,9 +262,30 @@ def leaveWorkspace(workspaceId):
 def confirmLeaveWorkspace(workspaceId):
     user = User.query.get(current_user.id)
     workspace = Workspace.query.filter_by(id=workspaceId).first()
+    for m in workspace.mods:
+        if current_user.id == m:
+            workspace.mods.remove(user)
+            db.session.commit()
     workspace.members.remove(user)
     db.session.commit()
     return redirect(url_for('index'))
+
+@app.route("/kick-workspace/<int:workspaceId>/user/<int:userId>", methods=['GET', 'POST'])
+@login_required
+def kickWorkspace(workspaceId, userId):
+    workspace = Workspace.query.filter_by(id=workspaceId).first()
+    user = User.query.filter_by(id=userId).first()
+    return render_template('confirmKickWorkspace.html', workspace=workspace, user=user)
+
+@app.route("/confirm-kick-workspace/<int:workspaceId>/user/<int:userId>", methods=['POST'])
+@login_required
+def confirmKickWorkspace(workspaceId, userId):
+    workspace = Workspace.query.filter_by(id=workspaceId).first()
+    user = User.query.filter_by(id=userId).first()
+    workspace.members.remove(user)
+    db.session.commit()
+    worskspaceId = workspace.id
+    return redirect(url_for('mods', workspaceId=worskspaceId))
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
@@ -297,7 +318,7 @@ def login():
 @app.route('/logout/')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('aboutTotalCollab'))
 
 @app.route('/delete/')
 def delete():
