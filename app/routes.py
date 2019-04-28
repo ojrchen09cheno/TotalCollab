@@ -263,7 +263,7 @@ def confirmLeaveWorkspace(workspaceId):
     user = User.query.get(current_user.id)
     workspace = Workspace.query.filter_by(id=workspaceId).first()
     for m in workspace.mods:
-        if current_user.id == m:
+        if current_user.id == m.id:
             workspace.mods.remove(user)
             db.session.commit()
     workspace.members.remove(user)
@@ -282,6 +282,10 @@ def kickWorkspace(workspaceId, userId):
 def confirmKickWorkspace(workspaceId, userId):
     workspace = Workspace.query.filter_by(id=workspaceId).first()
     user = User.query.filter_by(id=userId).first()
+    for m in workspace.mods:
+        if user.id == m.id:
+            workspace.mods.remove(user)
+            db.session.commit()
     workspace.members.remove(user)
     db.session.commit()
     worskspaceId = workspace.id

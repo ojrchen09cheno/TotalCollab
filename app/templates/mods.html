@@ -184,7 +184,8 @@ somemsg {
           <div class="grid-item">{{s.username}}</div>
           <div class="grid-item2"><form action="{{ url_for('kickMod', workspaceId=workspace.id, userId = s.id) }}" method="post">
             <button type="Submit" class="btn btn-warning">Remove Moderator</button></form></div>
-          <div class="grid-item"></div>
+          <div class="grid-item3"><form action="{{ url_for('kickWorkspace', workspaceId=workspace.id, userId = s.id) }}" method="post">
+            <button type="Submit" class="btn btn-danger">Kick</button></form></div>
           {%endif%}
           {%endfor%}
       </div>
