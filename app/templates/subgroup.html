@@ -16,7 +16,7 @@
 
 });
       socket.on('message', function(msg) {
-          $("#messages").append('<li> <b>{{user.username}}</b> Says: '+msg.message+'</li>');
+          $("#messages").prepend('<b>{{user.username}}</b> Says: '+msg.message+'<br>');
             console.log('Received message');
 });
    $('#sendbutton').on('click', function() {
@@ -97,7 +97,17 @@
     top: 10%;
     left: 20%;
     bottom: 10%;
-    width: 80%;
+    width: 60%;
+    color: black;
+    text-align: left;
+    overflow: auto;
+  }
+  .content-right{
+    position: fixed;
+    top: 10%;
+    left: 80%;
+    bottom: 10%;
+    width: 20%;
     color: black;
     text-align: left;
     overflow: auto;
@@ -215,12 +225,13 @@ somemsg {
       <a href="{{ url_for('subgroup', workspaceId=workspace.id, subgroupId=subgroup.id, page=messages.next_num) }}">  <i class="fas fa-arrow-right fa-3x"></i></a>
       {% endif %}
     </div>
-
+    <div class="content-right">
       {% for msg in whiteboard %}
       <br>
       <img border="0" src="{{ msg.picture }}" width="200" height="200">
       {% endfor %}
       </div>
+    </div>
 
 
     <div class="footer">

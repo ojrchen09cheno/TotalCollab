@@ -172,7 +172,7 @@ def subgroup(workspaceId, subgroupId):
     members = subgroup.members
     page = request.args.get('page', 1, type=int)
     messages = Messages.query.filter_by(subgroup_id=subgroupId).order_by(Messages.timestamp.desc()).paginate(page, app.config['MESSAGES_PER_PAGE'], False)
-    whiteboard=subgroup.whiteboard
+    whiteboard=Whiteboard.query.filter_by(subgroup_id=subgroupId).order_by(Whiteboard.id.desc())
     return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages, user=current_user, members=members,whiteboard=whiteboard)
 
 @socketio.on('message')
