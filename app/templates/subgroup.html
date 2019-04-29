@@ -112,6 +112,19 @@
     text-align: left;
     overflow: auto;
   }
+  .grid-container {
+   display: grid;
+   grid-template-columns: auto;
+   background-color: white;
+   padding: 10px;
+ }
+ .grid-item {
+   background-color: white;
+   border: 1px solid black;
+   padding: 20px;
+   font-size: 30px;
+   text-align: left;
+ }
   h1{
     font size: 60px;
     text-align: center;
@@ -226,12 +239,13 @@ somemsg {
       {% endif %}
     </div>
     <div class="content-right">
-      {% for msg in whiteboard %}
-      <br>
-      <img border="0" src="{{ msg.picture }}" width="200" height="200">
-      {% endfor %}
-      </div>
-    </div>
+            <div class="grid-container">
+              {% for msg in whiteboard %}
+                {{msg.message_username}}:
+                <div class="grid-item"><img border="0" src="{{ msg.picture }}" width="200" height="200"></div>
+                {% endfor %}
+              </div>
+          </div>
 
 
     <div class="footer">
