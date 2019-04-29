@@ -16,7 +16,7 @@
 
 });
       socket.on('message', function(msg) {
-          $("#messages").append('<li>'+msg.message+'</li>');
+          $("#messages").append('<li> <b>{{user.username}}</b> Says: '+msg.message+'</li>');
             console.log('Received message');
 });
    $('#sendbutton').on('click', function() {
