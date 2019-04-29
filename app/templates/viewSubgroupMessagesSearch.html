@@ -1,0 +1,60 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<body>
+  {% block scripts %}
+  {{ moment.include_jquery() }}
+  {{ moment.include_moment() }}
+  {% endblock %}
+
+Showing search results of messages from subgroup <b>{{subgroup.name}}</b> that contain <b>{{search}}</b>
+
+  <ul>
+  {% for msg in messages.items %}
+  <b>{{msg.message_username}}</b> {{ moment(msg.timestamp).calendar() }}<br>
+    {{msg.message}}<br></br>
+  {% endfor %}
+  </ul>
+
+<div align="center">
+{% if messages.has_prev %}
+<a href="{{ url_for('searchSubgroupMessages', workspaceId=workspace.id, subgroupId=subgroup.id, search=search, page=messages.prev_num) }}">  <i class="fas fa-arrow-left fa-3x"></i></a>
+{% endif %}
+
+{% for page in messages.iter_pages(left_edge=1, left_current=1, right_current=2, right_edge=1) %}
+
+  {% if page %}
+    {% if messages.page == page %}
+      <a class="btn btn-info mb-4" href="{{ url_for('searchSubgroupMessages', workspaceId=workspace.id, subgroupId=subgroup.id, search=search, page=page) }}">{{ page }}</a>
+    {% else %}
+      <a class="btn btn-outline-info mb-4" href="{{ url_for('searchSubgroupMessages', workspaceId=workspace.id, subgroupId=subgroup.id, search=search, page=page) }}">{{ page }}</a>
+    {% endif %}
+  {% else %}
+    ...
+  {% endif %}
+{% endfor %}
+
+{% if messages.has_next %}
+<a href="{{ url_for('searchSubgroupMessages', workspaceId=workspace.id, subgroupId=subgroup.id, search=search, page=messages.next_num) }}">  <i class="fas fa-arrow-right fa-3x"></i></a>
+{% endif %}
+</div>
+
+
+
+
+
+</body>
+</html>

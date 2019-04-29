@@ -336,22 +336,22 @@ def delete():
 #        return self.followed.filter(
 #            followers.c.followed_id == user.id).count() > 0
 
-
-# shows the search page with results
-@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/search/")
+# search messages within a subgroup
+@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/search-messages/", methods=["GET", "POST"])
 @login_required
-def search(workspaceId, subgroupId):
-    if not g.search_form.validate():
-        return redirect(url_for('login'))
+def searchSubgroupMessages(workspaceId, subgroupId):
     workspace = Workspace.query.get(workspaceId)
-    subgroups = workspace.subgroups
+    subgroups= workspace.subgroups
     subgroup = subGroup.query.get(subgroupId)
-    messages = subgroup.messages
+    search = request.args.get('search', '*', type=str)
     page = request.args.get('page', 1, type=int)
-    messages, total = Messages.search(g.search_form.q.data, page, current_app.config['MESSAGES_PER_PAGE'])
-    next_url = url_for('search.html', q=g.search_form.q.data, page=page+1) if total > page * current_app.config['MESSAGES_PER_PAGE'] else None
-    prev_url = url_for('search.html', q=g.search_form.q.data, page=page-1) if page > 1 else None
-    return render_template('search.html', messages=messages, next_url=next_url, prev_url=prev_url,workspaceId=workspaceId, subgroupId=subgroupId)
+    page = request.args.get('page', 1, type=int)
+    messages = Messages.query.filter_by(subgroup_id=subgroupId).filter(Messages.message.contains(search)).order_by(Messages.timestamp.desc()).paginate(page, app.config['MESSAGES_PER_PAGE'], False)
+    if request.method == 'POST':
+        search = request.form.get("search")
+        page = request.args.get('page', 1, type=int)
+        messages = Messages.query.filter_by(subgroup_id=subgroupId).filter(Messages.message.contains(search)).order_by(Messages.timestamp.desc()).paginate(page, app.config['MESSAGES_PER_PAGE'], False)
+    return render_template("viewSubgroupMessagesSearch.html", workspace=workspace, subgroup=subgroup, messages=messages, search=search, page=page)
 
 #manage members of a subgroup
 @app.route("/workspace/<int:workspaceId>/subgropup/<int:subgroupId>/manageMembers/")

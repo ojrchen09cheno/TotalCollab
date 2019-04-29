@@ -68,6 +68,18 @@
     display: block;
     padding-top: 45px;
   }
+  .header {
+   position: fixed;
+   left: 0;
+   padding-top: 10px;
+   padding-bottom: 0;
+   padding-left:20%;
+   bottom: 90%;
+   width: 100%;
+   background-color: #B0C4DE;
+   color: white;
+   text-align: right;
+  }
   .footer {
    position: fixed;
    left: 0;
@@ -82,7 +94,7 @@
   }
   .content{
     position: fixed;
-    top: 0;
+    top: 10%;
     left: 20%;
     bottom: 10%;
     width: 80%;
@@ -165,6 +177,15 @@ somemsg {
     {{ moment.include_moment() }}
     {% endblock %}
 
+    <div class="header">
+      <div align="right">
+      <form action="{{ url_for('searchSubgroupMessages', workspaceId=workspace.id, subgroupId=subgroup.id) }}" method="post">
+        <input type="text" placeholder="Search Message..." name="search">
+        <button type="Submit" style="height:40px; width:40px"><i class="fas fa-search fa-1x"></i></button>
+      </form>
+    </div>
+    </div>
+
     <div class="content">
         <ul id="messages">
         {% for msg in messages.items %}
@@ -203,7 +224,7 @@ somemsg {
 
 
     <div class="footer">
-      <input type="text" id="myMessage"></input>
+      <input type="text" id="myMessage" style="width:80%"></input>
       <button id="sendbutton">Send</button> <a href="{{url_for('drawing', workspaceId=workspace.id, subgroupId=subgroup.id)}}"> Draw something </a>
       <br><br>
     </div>
