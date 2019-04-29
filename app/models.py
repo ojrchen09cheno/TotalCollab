@@ -202,6 +202,7 @@ class DirectMessage(db.Model):
     __tablename__="directmessage"
     id=db.Column(db.Integer,primary_key=True)
     message=db.Column(db.String,nullable=False)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     directgroupId=db.Column(db.Integer, db.ForeignKey('direct.id'),nullable=False)
     message_user_id=db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
     message_username=db.Column(db.Integer, db.ForeignKey('user.username'),nullable=False)

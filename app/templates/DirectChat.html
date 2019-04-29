@@ -3,9 +3,11 @@
 
 <html>
 <head>
-<title> YES | Total Collab </title>
+<title> Direct Message | Total Collab </title>
 <meta name= "viewport" content= "width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <style>
 .sidenav {
   height: 100%;
@@ -49,7 +51,7 @@
  left: 0;
  padding-top: 10px;
  padding-left:20%;
- bottom: 0;
+ top: 90%;
  width: 100%;
  background-color: #B0C4DE;
  color: white;
@@ -57,12 +59,13 @@
 }
 .content{
   position: fixed;
-  padding-left: 400px;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: 20%;
+  bottom: 10%;
+  width: 80%;
   color: black;
   text-align: left;
+  overflow: auto;
 }
 h1{
   font size: 60px;
@@ -120,19 +123,48 @@ padding-left: 400px:
       <c>{{channel.userOne}} and {{channel.userTwo}}</c>
     </div>
 
-
+    {% block scripts %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {% endblock %}
 
     <div class="content">
-      {% for m in messages %}
-        <b>{{m.message_username}}</b> said: {{m.message}}<br></br>
+      <ul id="messages">
+      {% for m in messages.items %}
+        <b>{{m.message_username}}</b> {{ moment(m.timestamp).calendar() }}<br>
+        {{m.message}}<br></br>
       {% endfor %}
-    </div>
+    </ul>
+
+    {% if messages.has_prev %}
+    <a href="{{ url_for('actualChannel', direct=direct, page=messages.prev_num) }}">  <i class="fas fa-arrow-left fa-3x"></i></a>
+    {% endif %}
+
+    {% for page in messages.iter_pages(left_edge=1, left_current=1, right_current=2, right_edge=1) %}
+
+      {% if page %}
+        {% if messages.page == page %}
+          <a class="btn btn-info mb-4" href="{{ url_for('actualChannel', direct=direct, page=page) }}">{{ page }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('actualChannel', direct=direct, page=page) }}">{{ page }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+
+    {% if messages.has_next %}
+    <a href="{{ url_for('actualChannel', direct=direct, page=messages.next_num) }}">  <i class="fas fa-arrow-right fa-3x"></i></a>
+    {% endif %}
 
     <div class="footer">
       <form action="{{ url_for('actualChannel', direct=direct) }}" method="post">
-             <input type="text" name="message"></input><button type="submit"> Submit </button>
+             <input type="text" name="message"></input><button type="submit"> Send </button>
            </form>
 
     </div>
+    </div>
+
+
   </body>
   </html>

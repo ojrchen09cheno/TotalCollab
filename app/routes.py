@@ -215,16 +215,15 @@ def direct(otherUserId):
 def actualChannel(direct):
     channel=Direct.query.get(direct)
     channelId=channel.id
-    messages=channel.messages
+    # messages=channel.messages
+    page = request.args.get('page', 1, type=int)
+    messages = DirectMessage.query.filter_by(directgroupId=direct).order_by(DirectMessage.timestamp.desc()).paginate(page, app.config['MESSAGES_PER_PAGE'], False)
     if request.method =="POST":
         message=request.form.get("message")
         channel.addMessage(message,current_user,channelId)
         return redirect(url_for('actualChannel', direct=direct))
 
     return render_template("DirectChat.html",direct=direct, channel=channel,messages=messages)
-
-
-
 
 @app.route("/newcode/<int:workspaceId>/", methods=["POST"])
 @login_required
