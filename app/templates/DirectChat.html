@@ -136,6 +136,7 @@ padding-left: 400px:
       {% endfor %}
     </ul>
 
+    <div align="center">
     {% if messages.has_prev %}
     <a href="{{ url_for('actualChannel', direct=direct, page=messages.prev_num) }}">  <i class="fas fa-arrow-left fa-3x"></i></a>
     {% endif %}
@@ -156,7 +157,8 @@ padding-left: 400px:
     {% if messages.has_next %}
     <a href="{{ url_for('actualChannel', direct=direct, page=messages.next_num) }}">  <i class="fas fa-arrow-right fa-3x"></i></a>
     {% endif %}
-
+  </div>
+  
     <div class="footer">
       <form action="{{ url_for('actualChannel', direct=direct) }}" method="post">
              <input type="text" name="message"></input><button type="submit"> Send </button>

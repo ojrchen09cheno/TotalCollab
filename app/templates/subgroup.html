@@ -172,7 +172,7 @@ somemsg {
           {{msg.message}}<br></br>
         {% endfor %}
       </ul>
-
+      <div align="center">
       {% if messages.has_prev %}
       <a href="{{ url_for('subgroup', workspaceId=workspace.id, subgroupId=subgroup.id, page=messages.prev_num) }}">  <i class="fas fa-arrow-left fa-3x"></i></a>
       {% endif %}
@@ -193,6 +193,7 @@ somemsg {
       {% if messages.has_next %}
       <a href="{{ url_for('subgroup', workspaceId=workspace.id, subgroupId=subgroup.id, page=messages.next_num) }}">  <i class="fas fa-arrow-right fa-3x"></i></a>
       {% endif %}
+    </div>
 
       {% for msg in whiteboard %}
       <br>
