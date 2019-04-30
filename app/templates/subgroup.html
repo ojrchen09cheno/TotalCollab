@@ -111,6 +111,7 @@
     color: black;
     text-align: left;
     overflow: auto;
+    border: 2px solid black;
   }
   .grid-container {
    display: grid;
@@ -239,14 +240,14 @@ somemsg {
       {% endif %}
     </div>
     <div class="content-right">
+      <div align="center">Whiteboards</div>
             <div class="grid-container">
               {% for msg in whiteboard %}
-                {{msg.message_username}}:
+                <b>{{msg.message_username}}</b> {{ moment(msg.timestamp).calendar() }}
                 <div class="grid-item"><img border="0" src="{{ msg.picture }}" width="200" height="200"></div>
                 {% endfor %}
               </div>
           </div>
-
 
     <div class="footer">
       <input type="text" id="myMessage" style="width:80%"></input>

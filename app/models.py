@@ -149,6 +149,7 @@ class Whiteboard(db.Model):
     __tablename__="whiteboard"
     id=db.Column(db.Integer,primary_key=True)
     picture=db.Column(db.String,nullable=False)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     subgroup_id=db.Column(db.Integer, db.ForeignKey('subgroup.id'),nullable=False)
     message_user_id=db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
     message_username=db.Column(db.Integer, db.ForeignKey('user.username'),nullable=False)
