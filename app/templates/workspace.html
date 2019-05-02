@@ -5,6 +5,7 @@
 <title> Workspace | Total Collab </title>
 <meta name= "viewport" content= "width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <style>
   .sidenav {
     height: 100%;
@@ -17,7 +18,7 @@
     overflow-x: hidden;
   }
   .sidenav a {
-    color: white;
+    color: black;
     font-size: 20px;
     text-align: left;
     font-family: 'PT Sans' sans-serif;
@@ -80,7 +81,7 @@
       <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
       <b>{{workspace.workspaceName}}</b>
       {% if current_user.id != workspace.owner %}
-      <a href="{{url_for('leaveWorkspace', workspaceId = workspace.id) }}">Leave {{workspace.workspaceName}}!</a>
+      <a href="{{url_for('leaveWorkspace', workspaceId = workspace.id) }}">Leave {{workspace.workspaceName}}! <i class="fas fa-door-open"></i></a>
       {% endif %}
       {%for m in workspace.mods%}
       {%if current_user.id == m.id%}
@@ -92,18 +93,18 @@
       {%endif%}
       {%endfor%}
       {% if current_user == owner%}
-      <a href="{{url_for('mods', workspaceId = workspace.id)}}">Manage Members</a>
+      <a href="{{url_for('mods', workspaceId = workspace.id)}}">Manage Members <i class="fas fa-users-cog"></i></a>
       {%endif%}
       <c>Subgroups
         {%for m in workspace.mods%}
         {%if current_user.id == m.id%}
-        <a href="{{ url_for('add_subgroup', workspaceId = workspace.id) }}"> Add subgroup here!</a>
+        <a href="{{ url_for('add_subgroup', workspaceId = workspace.id) }}"> Add subgroup here! <i class="fas fa-folder-plus"></i></a>
         {% endif %}
         {%endfor%}
       </c>
       <span style="font-size:25px;">
         {% for s in subgroups %}
-          <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}}</a>
+          <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}} <i class="far fa-comments"></i></a>
         {% endfor %}
       </span>
 
@@ -117,7 +118,7 @@
         {% if m.username == current_user.username%}
         {{m.username}} <br>
         {% else %}
-        {{m.username}} <a href="{{url_for('direct',otherUserId=m.id)}}">CHAT WITH THIS PERSON </a> <br>
+        <a href="{{url_for('direct',otherUserId=m.id)}}" style="font-size:25px" style="color:black"> {{m.username}} <i class="far fa-comment"></i></a> <br>
         {% endif %}<!-- put link here for direct messaging -->
         {% endfor%}
       </span>

@@ -157,7 +157,8 @@ somemsg {
       </ul>
       {% endif %}
       {% endwith %}</h4>
-      <h3> {{workspace.workspaceName}} Owner: {{owner.username}}</h3>
+      <h3>Workspace: {{workspace.workspaceName}}<br>
+         Owner: {{owner.username}}</h3>
       <h3> Members </h3>
       <div class="grid-container">
         {% for w in workMembers%}
