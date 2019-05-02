@@ -4,6 +4,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
 
+
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -22,29 +23,16 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Sign In')
 
 
-class SearchForm(FlaskForm):
-    q = StringField(('Search'), validators=[DataRequired()])
-
-    def __init__(self, *args, **kwargs):
-        if 'formdata' not in kwargs:
-            kwargs['formdata'] = request.args
-        if 'csrf_enabled' not in kwargs:
-            kwargs['csrf_enabled'] = False
-        super(SearchForm, self).__init__(*args, **kwargs)
-
-class TaskForm(FlaskForm):
-    tasks = StringField('Enter task', validators=[DataRequired()])
-    submit = SubmitField('Enter')
-
 class ProfileForm(FlaskForm):
-    firstName= StringField('First Name ..', render_kw={"placeholder": "First Name .."})
-    lastName=  StringField('Last Name ..', render_kw={"placeholder": "Last Name .."})
-    location= StringField('Location ..', render_kw={"placeholder": "Location"})
-    about_me= StringField('About me ..', render_kw={"placeholder": "About Me .. "})
-    submit= SubmitField('Create Your Profile')
+    firstName = StringField('First Name ..', render_kw={"placeholder": "First Name .."})
+    lastName = StringField('Last Name ..', render_kw={"placeholder": "Last Name .."})
+    location = StringField('Location ..', render_kw={"placeholder": "Location"})
+    about_me = StringField('About me ..', render_kw={"placeholder": "About Me .. "})
+    submit = SubmitField('Create Your Profile')
