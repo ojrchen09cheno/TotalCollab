@@ -84,7 +84,7 @@
         console.log(dataURL);
         $.ajax({
           type:"POST",
-          url: "http://127.0.0.1:5000/savedrawing",
+          url: "{{url_for('savepic')}}",
           data: {"dataURL":dataURL, "workspaceId":{{workspaceId}},"subgroupId":{{subgroupId}}},
           datatype: "json",
           success: function(data) {
