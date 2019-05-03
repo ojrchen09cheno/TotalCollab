@@ -5,6 +5,7 @@
 <title> Workspace | Total Collab </title>
 <meta name= "viewport" content= "width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <style>
   .sidenav {
     height: 100%;
@@ -78,42 +79,7 @@
     <div class="sidenav">
       <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"></a><br><br>
       <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
-      <b>{{workspace.workspaceName}}</b>
-      {%for m in workspace.mods%}
-      {%if current_user.id == m.id%}
-      Invite Code: {{workspace.code}}
-      <form action="{{ url_for('newcode', workspaceId = workspace.id) }}" method="post">
-        <button type="Submit"> Generate New Code </button>
-      </form>
-      {% endif %}
-      {%endfor%}
-      <c>Subgroups
-        {%for m in workspace.mods%}
-        {%if current_user.id == m.id%}
-        <a href="{{ url_for('add_subgroup', workspaceId = workspace.id) }}"> Add subgroup here!</a>
-        {% endif %}
-        {%endfor%}
-      </c>
-      <span style="font-size:25px;">
-        {% for s in subgroups %}
-        {% for m in s.members%}
-        {% if current_user == m%}
-          <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}}</a>
-        {%endif%}
-        {%endfor%}
-        {% endfor %}
-      </span>
-
-      <c>Owner</c>
-      <span style="font-size:25px;">
-      {{owner.username}}
-      </span>
-      <c>Members</c>
-      <span style="font-size:25px;">
-        {% for m in members %}
-        {{m.username}} <a href="{{url_for('direct',otherUserId=m.id)}}">CHAT WITH THIS PERSON </a> <br> <!-- put link here for direct messaging -->
-        {% endfor%}
-      </span>
+      <b><a href="{{ url_for('workspace', workspaceId = workspace.id) }}" style="font-size: 40px;">{{workspace.workspaceName}} <i class="fas fa-hand-point-left"></i></a></b>
     </div>
 
     <div class="content">

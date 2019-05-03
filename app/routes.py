@@ -118,7 +118,7 @@ def sendReminderEveryone(workspaceId, taskId):
                     conn.send(msg)
             return redirect(url_for('workspace', workspaceId=workspaceId))
         return render_template('sendReminder.html', workspaceId=workspaceId, subgroups=subgroups,
-                               workspace=workspace, members=members, owner=owner, tasks=tasks, taskId=taskId)
+                               workspace=workspace, members=members, tasks=tasks, taskId=taskId)
 
 
 @app.route('/workspace/<int:workspaceId>/reminder/task/<int:taskId>/<string:assigned_person>', methods=['GET','POST'])
@@ -140,7 +140,7 @@ def sendReminderAssigned(workspaceId, taskId, assigned_person):
             mail.send(msg)
             return redirect(url_for('workspace', workspaceId=workspaceId))
         return render_template('sendReminder.html', workspaceId=workspaceId, subgroups=subgroups,
-                               workspace=workspace, members=members, owner=owner,
+                               workspace=workspace, members=members,
                                tasks=tasks, taskId=taskId, assigned_person=assigned_person)
 
 
