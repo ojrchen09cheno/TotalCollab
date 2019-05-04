@@ -489,6 +489,11 @@ def kickMod(workspaceId, userId):
 def createUserProfile():
     user = current_user
     form = ProfileForm()
+    if request.method == 'GET':
+        form.firstName.data = user.firstName
+        form.lastName.data = user.lastName
+        form.location.data = user.location
+        form.about_me.data = user.about_me
     if request.method == 'POST':
         user.firstName = request.form.get("firstName")
         user.lastName = request.form.get("lastName")
