@@ -8,16 +8,13 @@
         prevY = 0,
         currY = 0,
         dot_flag = false;
-
     var x = "black",
         y = 2;
-
     function init() {
         canvas = document.getElementById('can');
         ctx = canvas.getContext("2d");
         w = canvas.width;
         h = canvas.height;
-
         canvas.addEventListener("mousemove", function (e) {
             findxy('move', e)
         }, false);
@@ -31,7 +28,6 @@
             findxy('out', e)
         }, false);
     }
-
     function color(obj) {
         switch (obj.id) {
             case "green":
@@ -58,9 +54,7 @@
         }
         if (x == "white") y = 14;
         else y = 2;
-
     }
-
     function draw() {
         ctx.beginPath();
         ctx.moveTo(prevX, prevY);
@@ -70,7 +64,6 @@
         ctx.stroke();
         ctx.closePath();
     }
-
     function erase() {
         var m = confirm("Want to clear");
         if (m) {
@@ -78,7 +71,6 @@
             document.getElementById("canvasimg").style.display = "none";
         }
     }
-
     function save() {
         var dataURL = canvas.toDataURL("image/png");
         console.log(dataURL);
@@ -100,14 +92,12 @@
           console.log("SENT");
         })
     }
-
     function findxy(res, e) {
         if (res == 'down') {
             prevX = currX;
             prevY = currY;
             currX = e.clientX - canvas.offsetLeft;
             currY = e.clientY - canvas.offsetTop;
-
             flag = true;
             dot_flag = true;
             if (dot_flag) {

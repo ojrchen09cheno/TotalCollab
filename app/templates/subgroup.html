@@ -16,8 +16,12 @@
 
 });
       socket.on('message', function(msg) {
-          $("#messages").prepend('<b>{{user.username}}</b> Says: '+msg.message+'<br>');
-            console.log('Received message');
+        if(msg.subgroupId != {{subgroup.id}} && msg.workspaceId != {{workspace.id}}){
+          }else
+          {
+            $("#messages").prepend('<b>{{user.username}}</b> Says: '+msg.message + '<br>');
+              console.log('Received message');
+          }
 });
    $('#sendbutton').on('click', function() {
      if ($('#myMessage').val() != ''){
