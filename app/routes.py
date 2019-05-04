@@ -548,7 +548,7 @@ def addTask(workspaceId):
     return render_template('taskboardAdd.html',workspaceId=workspaceId, workspace=workspace, members=members)
 
 
-@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/TET", methods=["GET","POST"])
+@app.route("/workspace/<int:workspaceId>/subgroup/<int:subgroupId>/Draw", methods=["GET","POST"])
 @login_required
 def drawing(workspaceId, subgroupId):
     # p=json.dumps(data)
@@ -556,7 +556,6 @@ def drawing(workspaceId, subgroupId):
     # print('message: ' + str(data))
     workspace = Workspace.query.get(workspaceId)
     subgroup = subGroup.query.get(subgroupId)
-    print(workspace)
     return render_template("Drawing.html",workspace= workspace, subgroup=subgroup)
 
 
