@@ -554,15 +554,10 @@ def drawing(workspaceId, subgroupId):
     # p=json.dumps(data)
     # hey=json.loads(p)
     # print('message: ' + str(data))
-
-    workspace=Workspace.query.get
-    if request.method == 'POST':
-        workspace = Workspace.query.get('workspaceId')
-        subgroup = subGroup.query.get('subgroupId')
-        picture = request.get("can")
-        subgroup.addPic(picture, current_user, subgroup.id)
-        return redirect(url_for('subgroup', workspaceId=workspaceId, subgroupId=subgroupId))
-    return render_template("Drawing.html",workspaceId= workspaceId, subgroupId=subgroupId)
+    workspace = Workspace.query.get(workspaceId)
+    subgroup = subGroup.query.get(subgroupId)
+    print(workspace)
+    return render_template("Drawing.html",workspace= workspace, subgroup=subgroup)
 
 
 @app.route("/savedrawing", methods=["POST"])

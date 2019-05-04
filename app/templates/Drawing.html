@@ -77,7 +77,7 @@
         $.ajax({
           type:"POST",
           url: "{{url_for('savepic')}}",
-          data: {"dataURL":dataURL, "workspaceId":{{workspaceId}},"subgroupId":{{subgroupId}}},
+          data: {"dataURL":dataURL, "workspaceId":{{workspace.id}},"subgroupId":{{subgroup.id}}},
           datatype: "json",
           success: function(data) {
             console.log(data);
@@ -122,7 +122,7 @@
         }
     }
     </script>
-    <h1> {{workspaceId}} , {{subgroupId}} </h1>
+    <h1> {{workspace.workspaceName}} , {{subgroup.id}} </h1>
 
     <body onload="init()">
         <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
@@ -137,7 +137,7 @@
         <div style="position:absolute;top:22%;left:45%;width:15px;height:15px;background:white;border:2px solid;" id="white" onclick="color(this)"></div>
         <img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;">
         <input type="button" value="SUBMIT" id="btn" size="30" onclick="save()" style="position:absolute;top:70%;left:10%;">
-      <a href ="{{url_for('subgroup', workspaceId = workspaceId, subgroupId=subgroupId)}}"> GOBACK </a>
+      <a href ="{{url_for('subgroup', workspaceId = workspace.id, subgroupId=subgroup.id)}}"> GOBACK </a>
         <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="position:absolute;top:70%;left:15%;">
     </body>
     </html>
