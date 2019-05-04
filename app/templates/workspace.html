@@ -130,7 +130,12 @@
       </h2>
       <h3>
           <form action="" method="post" novalidate>
-              Filter by Name: <input type="text" name="filterName"><br>
+              Filter by Name: <select name="filterName" size="1">
+              <option value="" selected> </option>  
+              {% for m in members %}
+              <option value="{{m.username}}">{{m.username}}</option>
+              {% endfor %}
+            </select>
               <button type="Submit"> Submit</button>
           </form>
       </h3>
@@ -153,7 +158,7 @@
         <a href="{{ url_for('sendReminderEveryone', taskId = t.id, workspaceId = workspace.id) }}"> All Workspace Members</a> or
         <a href="{{ url_for('sendReminderAssigned', taskId = t.id, workspaceId = workspace.id, assigned_person=t.assigned_person.username) }}"> {{t.assigned_person.username}}</a><br>
         <a href="{{url_for('taskboardDelete', taskId = t.id, workspaceId = workspace.id) }}"> Delete Task</a>
-        {% endif %}{% endfor %}{% endif %}<br><br>
+        {% endif %}{% endfor %}{% endif %}<br>
         {% endfor %}
       </h3>
 
