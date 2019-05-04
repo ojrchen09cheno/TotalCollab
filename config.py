@@ -7,7 +7,7 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    MESSAGES_PER_PAGE = 10
+    MESSAGES_PER_PAGE = 9
     USERS_PER_PAGE = 3
     MAIL_SERVER = 'smtp.gmail.com'  # name of the email server
     MAIL_PORT = 465  # port of server

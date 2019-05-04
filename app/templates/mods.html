@@ -150,6 +150,7 @@ somemsg {
 
     <div class="sidenav">
       <a href="{{ url_for('index')}}"> <img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"> </a>
+      <b><a href="{{ url_for('workspace', workspaceId = workspace.id) }}" style="font-size: 30px;">{{workspace.workspaceName}}</a></b>
     </div>
 
     <div class="content">

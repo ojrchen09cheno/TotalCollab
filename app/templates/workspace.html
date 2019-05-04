@@ -131,7 +131,7 @@
       <h3>
           <form action="" method="post" novalidate>
               Filter by Name: <select name="filterName" size="1">
-              <option value="" selected> </option>  
+              <option value="" selected> </option>
               {% for m in members %}
               <option value="{{m.username}}">{{m.username}}</option>
               {% endfor %}

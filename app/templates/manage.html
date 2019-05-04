@@ -144,6 +144,8 @@ somemsg {
 
     <div class="sidenav">
       <a href="{{ url_for('index')}}"> <img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"> </a>
+      <b><a href="{{ url_for('workspace', workspaceId = workspace.id) }}" style="font-size: 30px;">{{workspace.workspaceName}}</a></b>
+      <c><a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = subgroup.id) }}" style="font-size: 30px;">{{subgroup.name}}</c><br>
     </div>
 
     <div class="content">
@@ -157,8 +159,7 @@ somemsg {
       </ul>
       {% endif %}
       {% endwith %}</h4>
-      <h3>Workspace: {{workspace.workspaceName}}<br>
-         Owner: {{owner.username}}</h3>
+      <h3> {{workspace.workspaceName}} Owner: {{owner.username}}</h3>
       <h3> Members </h3>
       <div class="grid-container">
         {% for w in workMembers%}
