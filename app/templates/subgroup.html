@@ -19,13 +19,13 @@
         if(msg.subgroupId != {{subgroup.id}} && msg.workspaceId != {{workspace.id}}){
           }else
           {
-            $("#messages").prepend('<b>{{user.username}}</b> Says: '+msg.message + '<br>');
+            $("#messages").prepend('<b>'+msg.username+'</b>'+ ' Says: '+msg.message + '<br>');
               console.log('Received message');
           }
 });
    $('#sendbutton').on('click', function() {
      if ($('#myMessage').val() != ''){
-       socket.json.send(({ 'message': $('#myMessage').val(),'subgroupId': {{subgroup.id}},'workspaceId':{{workspace.id}},'user':{{current_user.id}}}));
+       socket.json.send({ 'message': $('#myMessage').val(),'subgroupId': {{subgroup.id}},'workspaceId':{{workspace.id}},'user':{{current_user.id}},'username':'{{current_user.username}}' });
          $('#myMessage').val('');
        }
 });
