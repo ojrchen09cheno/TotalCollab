@@ -110,7 +110,11 @@
 
       <c>Owner</c>
       <span style="font-size:25px;">
-      {{owner.username}}
+        {% if owner.username == current_user.username%}
+        {{owner.username}} <br>
+        {% else %}
+        <a href="{{url_for('direct',otherUserId=owner.id)}}" style="font-size:25px" style="color:black"> {{owner.username}} <i class="far fa-comment"></i></a> <br>
+        {% endif %}
       </span>
       <c>Members</c>
       <span style="font-size:25px;">
@@ -119,7 +123,19 @@
         {{m.username}} <br>
         {% else %}
         <a href="{{url_for('direct',otherUserId=m.id)}}" style="font-size:25px" style="color:black"> {{m.username}} <i class="far fa-comment"></i></a> <br>
-        {% endif %}<!-- put link here for direct messaging -->
+        {% endif %}
+        {% endfor%}
+      </span>
+      <c>Moderators</c>
+      <span style="font-size:25px;">
+        {% for m in mods %}
+        {% if m.username != owner.username%}
+        {% if m.username == current_user.username%}
+        {{m.username}} <br>
+        {% else %}
+        <a href="{{url_for('direct',otherUserId=m.id)}}" style="font-size:25px" style="color:black"> {{m.username}} <i class="far fa-comment"></i></a> <br>
+        {% endif %}
+        {%endif%}
         {% endfor%}
       </span>
     </div>

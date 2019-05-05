@@ -80,6 +80,12 @@ def workspace(workspaceId):
     tasks = workspace.taskboard
     user = current_user
     current_Date_Time = datetime.now()
+    mods = workspace.mods
+    check = True
+    for m in members:
+        for mod in mods:
+            if m == mod:
+                members.remove(mod)
 
     if request.method == "POST":
         Filter = request.form.get("filterName")
@@ -89,7 +95,7 @@ def workspace(workspaceId):
             return render_template('workspace.html', workspaceId=workspaceId, subgroups=subgroups,
                                    workspace=workspace, members=members, owner=owner, tasks=tasks, user=user)
     return render_template('workspace.html', workspaceId=workspaceId, subgroups=subgroups,
-                           workspace=workspace, members=members, owner=owner, tasks=tasks, user=user)
+                           workspace=workspace, members=members, owner=owner, tasks=tasks, user=user, mods = mods)
 
 
 @app.route('/workspace/<int:workspaceId>/reminder/task/<int:taskId>/everyone', methods=['GET', 'POST'])
