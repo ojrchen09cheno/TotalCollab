@@ -150,7 +150,7 @@ function filterFunction() {
 </script>
 
 <div class="content4">
-<h3><hr>
+<h3>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 <ul>
@@ -174,8 +174,6 @@ function filterFunction() {
 </div>
 
 <div class="content">
-
-  <hr>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 <ul>
@@ -204,7 +202,7 @@ function filterFunction() {
   </form>
 </div>
 
-<div class="content4">
+<!-- <div class="content4">
   <h1> Users </h1><
   {% for u in users %}
   <h2>{{u.username}} is in workspaces:</h2>
@@ -212,6 +210,6 @@ function filterFunction() {
   <h3>{{w.workspaceName}}</h3>
   {% endfor%}<br><br>
   {% endfor %}
-</div>
+</div> -->
 </body>
 </html>
