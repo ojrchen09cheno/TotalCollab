@@ -40,7 +40,7 @@ class User(UserMixin, db.Model):
                            backref=db.backref('mods', lazy='dynamic'), lazy='dynamic')
     workspaces = db.relationship("Workspace", secondary=subs,
                                  backref=db.backref('members', lazy='dynamic'), lazy='dynamic')
-    subgroups = db.relationship("subGroup", secondary=subgroupMember,
+    subgroups = db.relationship("Subgroup", secondary=subgroupMember,
                                 backref=db.backref('members', lazy='dynamic'), lazy='dynamic')
     assignee = db.relationship('Taskboard', backref='assigned_person', lazy='dynamic')
 
@@ -66,11 +66,11 @@ class Workspace(db.Model):
     owner = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     taskboard = db.relationship("Taskboard",
                                 backref="taskboard", lazy=True)
-    subgroups = db.relationship("subGroup",
+    subgroups = db.relationship("Subgroup",
                                 backref="workspace", lazy=True, cascade="all, delete")
 
     def addsubgroup(self, name, user):
-        newGroup = subGroup(name=name, workspaceId=self.id)
+        newGroup = Subgroup(name=name, workspaceId=self.id)
         db.session.add(newGroup)
         newGroup.members.append(user)
         db.session.commit()
@@ -86,7 +86,7 @@ class Workspace(db.Model):
         db.session.commit()
 
 
-class subGroup(db.Model):
+class Subgroup(db.Model):
     __tablename__ = "subgroup"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)

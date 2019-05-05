@@ -174,7 +174,7 @@ def add_subgroup(workspaceId):
 def subgroup(workspaceId, subgroupId):
     workspace = Workspace.query.get(workspaceId)
     subgroups = workspace.subgroups
-    subgroup = subGroup.query.get(subgroupId)
+    subgroup = Subgroup.query.get(subgroupId)
     members = subgroup.members
     page = request.args.get('page', 1, type=int)
     messages = Messages.query.filter_by(subgroup_id=subgroupId)\
@@ -195,7 +195,7 @@ def handleMessage(msg):
     print('message: ' + str(msg))
     #workspace = Workspace.query.get(hey['workspaceId'])
     #subgroups = workspace.subgroups
-    subgroup = subGroup.query.get(hey['subgroupId'])
+    subgroup = Subgroup.query.get(hey['subgroupId'])
     #messages = subgroup.messages
     user = User.query.get(hey['user'])
     subgroup.addMessage(hey['message'],user,hey['subgroupId'])
@@ -387,7 +387,7 @@ def delete():
 def searchSubgroupMessages(workspaceId, subgroupId):
     workspace = Workspace.query.get(workspaceId)
     subgroups = workspace.subgroups
-    subgroup = subGroup.query.get(subgroupId)
+    subgroup = Subgroup.query.get(subgroupId)
     search = request.args.get('search', '*', type=str)
     page = request.args.get('page', 1, type=int)
     page = request.args.get('page', 1, type=int)
@@ -411,7 +411,7 @@ def searchSubgroupMessages(workspaceId, subgroupId):
 @login_required
 def manageMembers(workspaceId,subgroupId):
     workspace = Workspace.query.get(workspaceId)
-    subgroup = subGroup.query.get(subgroupId)
+    subgroup = Subgroup.query.get(subgroupId)
     subMembers = subgroup.members
     members = workspace.members
     members = []
@@ -442,7 +442,7 @@ def manageMembers(workspaceId,subgroupId):
 @login_required
 def add(workspaceId, subgroupId,userId):
     user = User.query.get(userId)
-    subgroup = subGroup.query.get(subgroupId)
+    subgroup = Subgroup.query.get(subgroupId)
     subgroup.members.append(user)
     db.session.commit()
     flash("Added member")
@@ -454,7 +454,7 @@ def add(workspaceId, subgroupId,userId):
 @login_required
 def kick(workspaceId, subgroupId, userId):
     user = User.query.get(userId)
-    subgroup = subGroup.query.get(subgroupId)
+    subgroup = Subgroup.query.get(subgroupId)
     subgroup.members.remove(user)
     db.session.commit()
     flash("Kicked member")
@@ -582,7 +582,7 @@ def drawing(workspaceId, subgroupId):
     # hey=json.loads(p)
     # print('message: ' + str(data))
     workspace = Workspace.query.get(workspaceId)
-    subgroup = subGroup.query.get(subgroupId)
+    subgroup = Subgroup.query.get(subgroupId)
     return render_template("Drawing.html",workspace= workspace, subgroup=subgroup)
 
 
@@ -595,7 +595,7 @@ def savepic():
     print(str(a))
 
     workspace = Workspace.query.get(b)
-    subgroup = subGroup.query.get(c)
+    subgroup = Subgroup.query.get(c)
     subgroup.addPic(a, current_user, c)
     # save method here
     return "It's Good?"
@@ -604,7 +604,7 @@ def savepic():
 @app.route("/Test2", methods=["GET"])
 def f():
     workspace = Workspace.query.get(1)
-    subgroup = subGroup.query.get(1)
+    subgroup = Subgroup.query.get(1)
     whiteboard = subgroup.whiteboard
     return render_template("OTHERTEST.html", whiteboard=whiteboard)
 
