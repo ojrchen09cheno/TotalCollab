@@ -118,16 +118,6 @@
         <a href="{{url_for('direct',otherUserId=owner.id)}}" style="font-size:25px" style="color:black"> {{owner.username}} <i class="far fa-comment"></i></a> <br>
         {% endif %}
       </span>
-      <c>Members</c>
-      <span style="font-size:25px;">
-        {% for m in members %}
-        {% if m.username == current_user.username%}
-        {{m.username}} <br>
-        {% else %}
-        <a href="{{url_for('direct',otherUserId=m.id)}}" style="font-size:25px" style="color:black"> {{m.username}} <i class="far fa-comment"></i></a> <br>
-        {% endif %}
-        {% endfor%}
-      </span>
       <c>Moderators</c>
       <span style="font-size:25px;">
         {% for m in mods %}
@@ -140,6 +130,16 @@
         {%endif%}
         {% endfor%}
       </span>
+      <c>Members</c>
+      <span style="font-size:25px;">
+        {% for m in members %}
+        {% if m.username == current_user.username%}
+        {{m.username}} <br>
+        {% else %}
+        <a href="{{url_for('direct',otherUserId=m.id)}}" style="font-size:25px" style="color:black"> {{m.username}} <i class="far fa-comment"></i></a> <br>
+        {% endif %}
+        {% endfor%}
+      </span>
     </div>
 
     <div class="content">
@@ -150,6 +150,11 @@
           <form action="" method="post" novalidate>
               Filter by Name: <select name="filterName" size="1">
               <option value="" selected> </option>
+              <option value="{{owner.username}}">{{owner.username}}</option>
+              {% for m in mods %}
+              {% if m.username != owner.username%}
+              <option value="{{m.username}}">{{m.username}}</option>
+              {% endif %}{% endfor %}
               {% for m in members %}
               <option value="{{m.username}}">{{m.username}}</option>
               {% endfor %}
