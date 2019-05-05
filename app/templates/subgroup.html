@@ -29,6 +29,12 @@
          $('#myMessage').val('');
        }
 });
+    $('#myMessage').on('keypress', function(e) {
+      if ($('#myMessage').val() != '' && e.which == 13){
+        socket.json.send({ 'message': $('#myMessage').val(),'subgroupId': {{subgroup.id}},'workspaceId':{{workspace.id}},'user':{{current_user.id}},'username':'{{current_user.username}}' });
+          $('#myMessage').val('');
+        }
+});
 });
 
 
