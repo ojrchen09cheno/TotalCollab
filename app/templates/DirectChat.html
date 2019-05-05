@@ -120,7 +120,8 @@ padding-left: 400px:
       <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"></a>
       <!-- <img class="sidenav pic" src="tclogo.jpg" alt= "TC Logo"></> -->
       <c></c>
-      <c>{{channel.userOne}} and {{channel.userTwo}}</c>
+      <br>
+      <c>{{userone.username}} Talking to {{usertwo.username}}</c>
     </div>
 
     {% block scripts %}
@@ -158,10 +159,10 @@ padding-left: 400px:
     <a href="{{ url_for('actualChannel', direct=direct, page=messages.next_num) }}">  <i class="fas fa-arrow-right fa-3x"></i></a>
     {% endif %}
   </div>
-  
+
     <div class="footer">
       <form action="{{ url_for('actualChannel', direct=direct) }}" method="post">
-             <input type="text" name="message"></input><button type="submit"> Send </button>
+             <input type="text" name="message" style="width:80%"></input><button type="submit"> Send </button>
            </form>
 
     </div>

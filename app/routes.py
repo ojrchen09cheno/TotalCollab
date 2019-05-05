@@ -229,8 +229,9 @@ def direct(otherUserId):
 @app.route("/directChat/<int:direct>",methods=["GET", "POST"])
 def actualChannel(direct):
     channel = Direct.query.get(direct)
+    userone= User.query.get(channel.userOne)
+    usertwo=User.query.get(channel.userTwo)
     channelId = channel.id
-    # messages=channel.messages
     page = request.args.get('page', 1, type=int)
     messages = DirectMessage.query.filter_by(directgroupId=direct)\
         .order_by(DirectMessage.timestamp.desc())\
@@ -240,7 +241,7 @@ def actualChannel(direct):
         channel.addMessage(message, current_user, channelId)
         return redirect(url_for('actualChannel', direct=direct))
 
-    return render_template("DirectChat.html",direct=direct, channel=channel,messages=messages)
+    return render_template("DirectChat.html",direct=direct, channel=channel,userone=userone,usertwo=usertwo,messages=messages)
 
 
 @app.route("/newcode/<int:workspaceId>/", methods=["POST"])
