@@ -193,10 +193,10 @@ def handleMessage(msg):
     hey = json.loads(p)
 
     print('message: ' + str(msg))
-    workspace = Workspace.query.get(hey['workspaceId'])
-    subgroups = workspace.subgroups
+    #workspace = Workspace.query.get(hey['workspaceId'])
+    #subgroups = workspace.subgroups
     subgroup = subGroup.query.get(hey['subgroupId'])
-    messages = subgroup.messages
+    #messages = subgroup.messages
     user = User.query.get(hey['user'])
     subgroup.addMessage(hey['message'],user,hey['subgroupId'])
     send(msg, broadcast=True)
@@ -227,6 +227,7 @@ def direct(otherUserId):
 
 
 @app.route("/directChat/<int:direct>",methods=["GET", "POST"])
+@login_required
 def actualChannel(direct):
     channel = Direct.query.get(direct)
     userone= User.query.get(channel.userOne)
@@ -242,6 +243,20 @@ def actualChannel(direct):
         return redirect(url_for('actualChannel', direct=direct))
 
     return render_template("DirectChat.html",direct=direct, channel=channel,userone=userone,usertwo=usertwo,messages=messages)
+
+#@socketio.on('direct_message')
+#def handleMessage(msg):
+#
+#    p = json.dumps(msg)
+#    hey = json.loads(p)
+#
+#    print('message: ' + str(msg))
+#    directGroup = Direct.query.get(hey['DirectID'])
+#
+#    user = User.query.get(hey['user'])
+#    subgroup.addMessage(hey['message'],current_user,hey['DirectID'])
+#    send(msg, broadcast=True)
+
 
 
 @app.route("/newcode/<int:workspaceId>/", methods=["POST"])
