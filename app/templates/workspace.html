@@ -140,6 +140,9 @@
         {% endif %}
         {% endfor%}
       </span>
+      {% if current_user.id == owner.id%}
+      <a href="{{url_for('deleteworkspace', workspaceId = workspace.id)}}" style="font-size:25px" style="color:black"> Delete Workspace <i class="far fa-times-circle"></i></a> <br>
+      {%endif%}
     </div>
 
     <div class="content">

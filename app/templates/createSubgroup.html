@@ -17,6 +17,13 @@
     background-color: #B0C4DE;
     overflow-x: hidden;
   }
+  h3{
+    font size: 30px;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+    padding-top: 20px;
+    padding-left: 500px;
+  }
   .sidenav a {
     color: white;
     font-size: 20px;
@@ -89,7 +96,20 @@
     </a>
     </div>
 
+
     <div class="content">
+
+      <h3>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}</h3>
+
       {%for m in workspace.mods%}
       {%if current_user.id == m.id%}
       <h1> Create a new subgroup</h1>

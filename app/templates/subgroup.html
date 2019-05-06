@@ -205,6 +205,12 @@ somemsg {
     </ul>
       {%endif%}
 
+      {% if subgroup.name != "General"%}
+      {% if current_user.id == owner.id%}
+      <a href="{{url_for('deletesubgroup', workspaceId = workspace.id, subgroupId = subgroup.id)}}" style="font-size:25px" style="color:black"> Delete Subgroup <i class="far fa-times-circle"></i></a> <br>
+      {%endif%}
+      {%endif%}
+
     </div>
 
     {% block scripts %}

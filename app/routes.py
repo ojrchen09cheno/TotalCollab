@@ -41,10 +41,13 @@ def index():
 def add_workspace():
     if request.method == "POST":
         workspaceName = request.form.get("workspaceName")
+        if workspaceName == "":
+            flash("Workspace Name Can't be Empty")
+            return redirect(url_for('index'))
         workspaces = Workspace.query.all()
         for w in workspaces:
             if workspaceName == w.workspaceName:
-                flash("Invalid Workspace Name")
+                flash("Workspace Already Exists")
                 return redirect(url_for('index'))
         newWorkspace = Workspace(workspaceName=workspaceName, owner=current_user.id)
         newWorkspace.newCode()
@@ -157,8 +160,11 @@ def add_subgroup(workspaceId):
     workspace = Workspace.query.get(workspaceId)
     owner = User.query.get(workspace.owner)
     subgroups = workspace.subgroups
+    subgroupName = request.form.get("subgroupName")
+    if subgroupName == "":
+        flash("Subgroup Name Can't be Empty")
+        return redirect(url_for('add_subgroup', workspaceId = workspaceId))
     if request.method == "POST":
-        subgroupName = request.form.get("subgroupName")
         for s in subgroups:
             if subgroupName == s.name:
                 flash("Subgroup Already Exists")
@@ -177,13 +183,14 @@ def subgroup(workspaceId, subgroupId):
     subgroup = Subgroup.query.get(subgroupId)
     members = subgroup.members
     page = request.args.get('page', 1, type=int)
+    owner = User.query.get(workspace.owner)
     messages = Messages.query.filter_by(subgroup_id=subgroupId)\
         .order_by(Messages.timestamp.desc())\
         .paginate(page, app.config['MESSAGES_PER_PAGE'], False)
     whiteboard = Whiteboard.query.filter_by(subgroup_id=subgroupId)\
         .order_by(Whiteboard.id.desc())
     return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages,
-                           user=current_user, members=members, whiteboard=whiteboard)
+                           user=current_user, members=members, whiteboard=whiteboard, owner = owner)
 
 
 @socketio.on('message')
@@ -672,3 +679,20 @@ def confirmInviteUserWorkspace(username, workspaceID):
         mail.send(msg)
         return redirect(url_for('viewUserProfiles'))
     return render_template("confirmInviteUserWorkspace.html", user=user, workspace=workspace)
+
+
+@app.route("/workspace/<int:workspaceId>/subgropup/<int:subgroupId>/deletesubgroup")
+@login_required
+def deletesubgroup(workspaceId, subgroupId):
+    subgroup = Subgroup.query.get(subgroupId)
+    db.session.delete(subgroup)
+    db.session.commit()
+    return redirect(url_for('workspace', workspaceId = workspaceId))
+
+@app.route("/workspace/<int:workspaceId>/deleteworkspace")
+@login_required
+def deleteworkspace(workspaceId):
+    workspace = Workspace.query.get(workspaceId)
+    db.session.delete(workspace)
+    db.session.commit()
+    return redirect(url_for('index'))
