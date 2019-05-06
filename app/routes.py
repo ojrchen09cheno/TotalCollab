@@ -681,18 +681,25 @@ def confirmInviteUserWorkspace(username, workspaceID):
     return render_template("confirmInviteUserWorkspace.html", user=user, workspace=workspace)
 
 
-@app.route("/workspace/<int:workspaceId>/subgropup/<int:subgroupId>/deletesubgroup")
+@app.route("/workspace/<int:workspaceId>/subgropup/<int:subgroupId>/deletesubgroup", methods=["GET", "POST"])
 @login_required
 def deletesubgroup(workspaceId, subgroupId):
+    workspace = Workspace.query.get(workspaceId)
     subgroup = Subgroup.query.get(subgroupId)
-    db.session.delete(subgroup)
-    db.session.commit()
-    return redirect(url_for('workspace', workspaceId = workspaceId))
+    if request.method =="POST":
+        subgroup = Subgroup.query.get(subgroupId)
+        db.session.delete(subgroup)
+        db.session.commit()
+        return redirect(url_for('workspace', workspaceId = workspaceId))
+    return render_template("confirmDeleteSubgroup.html", workspace = workspace, subgroup = subgroup)
 
-@app.route("/workspace/<int:workspaceId>/deleteworkspace")
+@app.route("/workspace/<int:workspaceId>/deleteworkspace", methods=["GET", "POST"])
 @login_required
 def deleteworkspace(workspaceId):
     workspace = Workspace.query.get(workspaceId)
-    db.session.delete(workspace)
-    db.session.commit()
-    return redirect(url_for('index'))
+    if request.method =="POST":
+        workspace = Workspace.query.get(workspaceId)
+        db.session.delete(workspace)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template("confirmDeleteWorkspace.html", workspace = workspace)
