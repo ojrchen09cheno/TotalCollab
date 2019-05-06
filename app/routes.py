@@ -182,6 +182,11 @@ def subgroup(workspaceId, subgroupId):
     subgroups = workspace.subgroups
     subgroup = Subgroup.query.get(subgroupId)
     members = subgroup.members
+    mods = workspace.mods
+    for m in members:
+        for mod in mods:
+            if m == mod:
+                members.remove(m)
     page = request.args.get('page', 1, type=int)
     owner = User.query.get(workspace.owner)
     messages = Messages.query.filter_by(subgroup_id=subgroupId)\
@@ -190,7 +195,7 @@ def subgroup(workspaceId, subgroupId):
     whiteboard = Whiteboard.query.filter_by(subgroup_id=subgroupId)\
         .order_by(Whiteboard.id.desc())
     return render_template('subgroup.html', workspace=workspace, subgroup=subgroup, messages=messages,
-                           user=current_user, members=members, whiteboard=whiteboard, owner = owner)
+                           user=current_user, members=members, whiteboard=whiteboard, owner = owner, mods = mods)
 
 
 @socketio.on('message')
@@ -280,9 +285,14 @@ def joinworkspace():
     username = request.form.get("username")
     code = request.form.get("invitecode")
     workspace = Workspace.query.filter_by(code=code).first()
+    check = False
     if workspace != None:
-        workspace.members.append(current_user)
-        db.session.commit()
+        for m in workspace.members:
+            if current_user == m:
+                check = True
+        if check == False:
+            workspace.members.append(current_user)
+            db.session.commit()
     else:
         flash("Invalid Code")
     return redirect(url_for('index'))
@@ -441,7 +451,7 @@ def manageMembers(workspaceId,subgroupId):
         if check==False:
             check = True
     return render_template('manage.html', workspace=workspace, subgroup=subgroup,
-                           subMembers=subMembers, workMembers=workMembers, owner=owner)
+                           subMembers=subMembers, workMembers=workMembers, owner=owner, mods= mods)
 
 
 # Route for adding members to a subgroup

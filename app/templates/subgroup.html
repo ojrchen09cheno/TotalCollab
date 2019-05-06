@@ -205,6 +205,15 @@ somemsg {
     </ul>
       {%endif%}
 
+      <c>Moderators</c>
+      <span style="font-size:25px;">
+        {% for m in mods %}
+        {% if m.username != owner.username%}
+        {{m.username}}<br>
+        {% endif %}
+        {% endfor%}
+      </span>
+
       {% if subgroup.name != "General"%}
       {% if current_user.id == owner.id%}
       <a href="{{url_for('deletesubgroup', workspaceId = workspace.id, subgroupId = subgroup.id)}}" style="font-size:25px" style="color:black"> Delete Subgroup <i class="far fa-times-circle"></i></a> <br>

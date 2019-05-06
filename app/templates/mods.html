@@ -164,8 +164,7 @@ somemsg {
       </ul>
       {% endif %}
       {% endwith %}</h4>
-      <h3> {{workspace.workspaceName}}</h3>
-      <h3> Members </h3>
+      <h3>Workspace Members </h3>
       <div class="grid-container">
         {% for w in workMembers%}
         {% if w != owner %}
@@ -178,7 +177,7 @@ somemsg {
         {%endfor%}
       </div>
 
-      <h3> Moderators </h3>
+      <h3>Workspace Moderators </h3>
       <div class="grid-container">
         {%for s in mods%}
         {% if s.id != workspace.owner%}
