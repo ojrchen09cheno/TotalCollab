@@ -145,7 +145,7 @@ somemsg {
     <div class="sidenav">
       <a href="{{ url_for('index')}}"> <img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"> </a>
       <b><a href="{{ url_for('workspace', workspaceId = workspace.id) }}" style="font-size: 30px;">{{workspace.workspaceName}} <i class="fas fa-hand-point-left"></i></a></b>
-      <c><a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = subgroup.id) }}" style="font-size: 30px;">{{subgroup.name}} <i class="far fa-comments"></i></c><br>
+      <c><a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = subgroup.id) }}" style="font-size: 30px;">{{subgroup.name}} </a><i class="far fa-comments"></i></c><br>
         <c>Moderators</c>
         <span style="font-size:25px;">
           {% for m in mods %}
