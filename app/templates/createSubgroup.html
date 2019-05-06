@@ -5,6 +5,7 @@
 <title> Create Subgroup | Total Collab </title>
 <meta name= "viewport" content= "width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css?family=PT+Sans|Raleway" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <style>
   .sidenav {
     height: 100%;
@@ -78,15 +79,11 @@
   <body>
 
     <div class="sidenav">
-      <img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"><br><br>
-      <a href="{{ url_for('workspace', workspaceId = workspace.id) }}"> <b>{{workspace.workspaceName}}</b></a>
-      <span style="font-size:25px;">
+      <a href="{{ url_for('index')}}"><img border="0" alt="TC Logo" src="/static/tclogo2.png" width="200" height="100"></a><br><br>
+      <a href="{{ url_for('workspace', workspaceId = workspace.id) }}"> <b>{{workspace.workspaceName}} <i class="fas fa-hand-point-left"></i></b></a>
+      <span style="font-size:30px;">
         {% for s in subgroups %}
-        {% for m in s.members%}
-        {% if current_user == m%}
-          <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}}</a>
-        {%endif%}
-        {%endfor%}
+          <a href="{{ url_for('subgroup', workspaceId = workspace.id, subgroupId = s.id) }}"> {{s.name}} <i class="far fa-comments"></i></a>
         {% endfor %}
       </span>
     </a>
